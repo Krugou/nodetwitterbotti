@@ -2,8 +2,7 @@ import "dotenv/config";
 import { TwitterApi } from "twitter-api-v2";
 import fetch from "node-fetch";
 
-let data =
-  "https://users.metropolia.fi/~aleksino/mediaprojekti/json/beaches.json";
+let data = "https://krugou.github.io/nonprojectfiles/beaches.json";
 // .env tiedostosta haetaan avaimet twitteriin
 const userClient = new TwitterApi({
   appKey: process.env.TWITTER_API_KEY,
