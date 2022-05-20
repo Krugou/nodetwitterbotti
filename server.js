@@ -29,7 +29,7 @@ const tweet = async () => {
         fetchDataJson.beaches[i].url +
         ".json"
     );
-    console.log("Fetching data...");
+    console.log("Fetching First data (" + i + ") ...");
     const fetchDataJson2 = await response.json();
     const laskejsondata = fetchDataJson2.data.length - 1;
     const jsonaika = new Date(fetchDataJson2.data[laskejsondata].time);
@@ -62,9 +62,9 @@ const tweet = async () => {
     }
   }
   console.log("Checking highest values...");
-  var biggest = temperatureData[0];
-  var nextbiggest = temperatureData[0];
-  for (var i = 0; i < temperatureData.length; i++) {
+  let biggest = temperatureData[0];
+  let nextbiggest = temperatureData[0];
+  for (let i = 0; i < temperatureData.length; i++) {
     if (temperatureData[i] > biggest) {
       nextbiggest = biggest;
       biggest = temperatureData[i];
@@ -117,10 +117,10 @@ const tweet = async () => {
   } catch (e) {
     console.error(e);
   }
-  console.log("tweet program complete reload in 15minutes...");
+  console.log("Tweet program complete reload in 15minutes...");
 };
 const tweet2 = async () => {
-  console.log("starting tweet program 2...");
+  console.log("Starting tweet program 2...");
   const response = await fetch(data);
   const fetchDataJson = await response.json();
   let temperatureData = [];
@@ -136,7 +136,7 @@ const tweet2 = async () => {
         fetchDataJson.beaches[i].url +
         ".json"
     );
-    console.log("fetching second dataset (" + i + ") ...");
+    console.log("Fetching second dataset (" + i + ") ...");
     const fetchDataJson2 = await response.json();
     const laskejsondata = fetchDataJson2.data.length - 1;
     const jsonaika = new Date(fetchDataJson2.data[laskejsondata].time);
@@ -169,9 +169,9 @@ const tweet2 = async () => {
     }
   }
   console.log("Checking second highest values...");
-  var biggest = temperatureData[0];
-  var nextbiggest = temperatureData[0];
-  for (var i = 0; i < temperatureData.length; i++) {
+  let biggest = temperatureData[0];
+  let nextbiggest = temperatureData[0];
+  for (let i = 0; i < temperatureData.length; i++) {
     if (temperatureData[i] > biggest) {
       nextbiggest = biggest;
       biggest = temperatureData[i];
@@ -229,10 +229,10 @@ const tweet2 = async () => {
 };
 let tweetlog1 = () => {
   console.log("First tweet in 10 seconds.");
-}; 
+};
 let tweetlog2 = () => {
   console.log("Second tweet in 15 seconds.");
-}; 
+};
 setInterval(tweetlog1, 890000);
 setInterval(tweet, 900000);
 setInterval(tweetlog2, 905000);
