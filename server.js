@@ -61,7 +61,7 @@ const tweet = async () => {
       continue;
     }
   }
-  console.log("Checking highest values...");
+  console.log("Checking second highest values...");
   let biggest = temperatureData[0];
   let nextbiggest = temperatureData[0];
   for (let i = 0; i < temperatureData.length; i++) {
@@ -168,7 +168,7 @@ const tweet2 = async () => {
       continue;
     }
   }
-  console.log("Checking second highest values...");
+  console.log("Checking highest values...");
   let biggest = temperatureData[0];
   let nextbiggest = temperatureData[0];
   for (let i = 0; i < temperatureData.length; i++) {
@@ -235,9 +235,7 @@ let tweetlog2 = () => {
 };
 // tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
 
-setInterval(tweetlog1, 890000);
-setInterval(tweet, 900000);
+setInterval(tweetlog1, 850000);
+setInterval(tweet, 860000);
 setInterval(tweetlog2, 905000);
 setInterval(tweet2, 921002);
-
-
