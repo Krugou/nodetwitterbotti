@@ -97,7 +97,7 @@ const tweet = async () => {
   console.log(timeTaken2.toLocaleTimeString("fi-FI"));
 
   */
-  console.log("starting tweeting sequence...");
+  console.log("Starting tweeting sequence...");
   //tweetataan
   let tweetinglist2 =
     "Kello: " +
