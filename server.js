@@ -117,7 +117,7 @@ const tweet = async () => {
   } catch (e) {
     console.error(e);
   }
-  console.log("Tweet program complete reload in 15minutes...");
+  console.log("First Tweeting sequence finished.");
 };
 const tweet2 = async () => {
   console.log("Starting tweet program 2...");
@@ -225,6 +225,7 @@ const tweet2 = async () => {
   } catch (e) {
     console.error(e);
   }
+  console.log("Second Tweeting sequence finished.");
   console.log("Tweet program complete reload in about 15minutes...");
 };
 let tweetlog1 = () => {
