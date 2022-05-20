@@ -10,8 +10,10 @@ const userClient = new TwitterApi({
   accessToken: process.env.TWITTER_ACCESS_TOKEN,
   accessSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 });
+console.log("Initializing...");
 // tweettaus Funktio
 const tweet = async () => {
+  console.log("starting tweet program...");
   const response = await fetch(data);
   const fetchDataJson = await response.json();
   let temperatureData = [];
@@ -27,14 +29,16 @@ const tweet = async () => {
         fetchDataJson.beaches[i].url +
         ".json"
     );
+    console.log("Fetching data...");
     const fetchDataJson2 = await response.json();
     const laskejsondata = fetchDataJson2.data.length - 1;
     const jsonaika = new Date(fetchDataJson2.data[laskejsondata].time);
-    console.log("jsonaika: " + jsonaika.getTime());
+    /*console.log("jsonaika: " + jsonaika.getTime());
     console.log(
       "nykyinen aika - 7200000: " + (currentDate.getTime() - 7200000)
     );
     console.log("nykyinen aika: " + currentDate.getTime());
+    */
     if (
       jsonaika.getTime() > currentDate.getTime() - 7200000 &&
       jsonaika.getTime() < currentDate.getTime()
@@ -48,29 +52,165 @@ const tweet = async () => {
       placeNameData.push(paikannimi);
       airTemperatureData.push(airTemperaturedata);
       timeTakenData.push(aikajsondata);
-      console.log(paikannimi);
+      /* console.log(paikannimi);
       console.log(aikajsondata);
       console.log(waterTemperaturedata);
       console.log(airTemperaturedata);
+      */
     } else {
       continue;
     }
   }
+  console.log("Checking highest values...");
+  var biggest = temperatureData[0];
+  var nextbiggest = temperatureData[0];
+  for (var i = 0; i < temperatureData.length; i++) {
+    if (temperatureData[i] > biggest) {
+      nextbiggest = biggest;
+      biggest = temperatureData[i];
+    } else if (
+      temperatureData[i] > nextbiggest &&
+      temperatureData[i] != biggest
+    )
+      nextbiggest = temperatureData[i];
+  }
+
   const max = Math.max(...temperatureData);
   const index = temperatureData.indexOf(max);
-  let placeName = placeNameData[index];
-  let waterTemperature = temperatureData[index];
-  let airTemperature = airTemperatureData[index];
-  let timeTaken = new Date(timeTakenData[index]);
+  const index2 = temperatureData.indexOf(nextbiggest);
+
+  let placeName2 = placeNameData[index2];
+  let waterTemperature2 = temperatureData[index2];
+  let airTemperature2 = airTemperatureData[index2];
+  let timeTaken2 = new Date(timeTakenData[index2]);
+  /* 
+  console.log(index);
+  console.log(biggest);
+  console.log(nextbiggest);
   console.log(placeName);
   console.log(waterTemperature);
   console.log(airTemperature);
   console.log(timeTaken.toLocaleTimeString("fi-FI"));
+  console.log(placeName2);
+  console.log(waterTemperature2);
+  console.log(airTemperature2);
+  console.log(timeTaken2.toLocaleTimeString("fi-FI"));
+
+  */
+  console.log("starting tweeting sequence...");
   //tweetataan
+  let tweetinglist2 =
+    "Kello: " +
+    timeTaken2.toLocaleTimeString("fi-FI") +
+    " Toiseksi korkein uimaveden lämpötila on paikassa: #" +
+    placeName2 +
+    " asteita on " +
+    waterTemperature2 +
+    " \xB0C  ja " +
+    "Ilman lämpötila on " +
+    airTemperature2 +
+    " \xB0C ";
+
+  try {
+    userClient.v2.tweet(tweetinglist2);
+    console.log(tweetinglist2);
+  } catch (e) {
+    console.error(e);
+  }
+  console.log("tweet program complete reload in 15minutes...");
+};
+const tweet2 = async () => {
+  console.log("starting tweet program 2...");
+  const response = await fetch(data);
+  const fetchDataJson = await response.json();
+  let temperatureData = [];
+  let placeNameData = [];
+  let airTemperatureData = [];
+  let timeTakenData = [];
+  let currentDate = new Date();
+  // console.log(currentDate.getTime());
+  // säädatan haku
+  for (let i = 0; i < fetchDataJson.beaches.length; i++) {
+    const response = await fetch(
+      "https://iot.fvh.fi/opendata/uiras/" +
+        fetchDataJson.beaches[i].url +
+        ".json"
+    );
+    console.log("fetching second dataset (" + i + ") ...");
+    const fetchDataJson2 = await response.json();
+    const laskejsondata = fetchDataJson2.data.length - 1;
+    const jsonaika = new Date(fetchDataJson2.data[laskejsondata].time);
+    /*console.log("jsonaika: " + jsonaika.getTime());
+    console.log(
+      "nykyinen aika - 7200000: " + (currentDate.getTime() - 7200000)
+    );
+    console.log("nykyinen aika: " + currentDate.getTime());
+    */
+    if (
+      jsonaika.getTime() > currentDate.getTime() - 7200000 &&
+      jsonaika.getTime() < currentDate.getTime()
+    ) {
+      let paikannimi = fetchDataJson2.meta.name;
+      let aikajsondata = fetchDataJson2.data[laskejsondata].time;
+      let waterTemperaturedata = fetchDataJson2.data[laskejsondata].temp_water;
+      let airTemperaturedata = fetchDataJson2.data[laskejsondata].temp_air;
+
+      temperatureData.push(waterTemperaturedata);
+      placeNameData.push(paikannimi);
+      airTemperatureData.push(airTemperaturedata);
+      timeTakenData.push(aikajsondata);
+      /* console.log(paikannimi);
+      console.log(aikajsondata);
+      console.log(waterTemperaturedata);
+      console.log(airTemperaturedata);
+      */
+    } else {
+      continue;
+    }
+  }
+  console.log("Checking second highest values...");
+  var biggest = temperatureData[0];
+  var nextbiggest = temperatureData[0];
+  for (var i = 0; i < temperatureData.length; i++) {
+    if (temperatureData[i] > biggest) {
+      nextbiggest = biggest;
+      biggest = temperatureData[i];
+    } else if (
+      temperatureData[i] > nextbiggest &&
+      temperatureData[i] != biggest
+    )
+      nextbiggest = temperatureData[i];
+  }
+
+  const max = Math.max(...temperatureData);
+  const index = temperatureData.indexOf(max);
+  const index2 = temperatureData.indexOf(nextbiggest);
+
+  let placeName = placeNameData[index];
+  let waterTemperature = temperatureData[index];
+  let airTemperature = airTemperatureData[index];
+  let timeTaken = new Date(timeTakenData[index]);
+  /* 
+  console.log(index);
+  console.log(biggest);
+  console.log(nextbiggest);
+  console.log(placeName);
+  console.log(waterTemperature);
+  console.log(airTemperature);
+  console.log(timeTaken.toLocaleTimeString("fi-FI"));
+  console.log(placeName2);
+  console.log(waterTemperature2);
+  console.log(airTemperature2);
+  console.log(timeTaken2.toLocaleTimeString("fi-FI"));
+
+  */
+  console.log("Starting second tweeting sequence...");
+  //tweetataan
+
   let tweetinglist =
     "Kello: " +
     timeTaken.toLocaleTimeString("fi-FI") +
-    " korkein uimaveden lämpötila on paikassa: " +
+    " Korkein uimaveden lämpötila on paikassa: #" +
     placeName +
     " asteita on " +
     waterTemperature +
@@ -78,13 +218,24 @@ const tweet = async () => {
     "Ilman lämpötila on " +
     airTemperature +
     " \xB0C ";
+
   try {
-    await userClient.v2.tweet(tweetinglist);
+    userClient.v2.tweet(tweetinglist);
     console.log(tweetinglist);
   } catch (e) {
     console.error(e);
   }
+  console.log("Tweet program complete reload in about 15minutes...");
 };
-tweet();
-// tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
+let tweetlog1 = () => {
+  console.log("First tweet in 10 seconds.");
+}; 
+let tweetlog2 = () => {
+  console.log("Second tweet in 15 seconds.");
+}; 
+setInterval(tweetlog1, 890000);
 setInterval(tweet, 900000);
+setInterval(tweetlog2, 905000);
+setInterval(tweet2, 921002);
+
+// tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
