@@ -13,7 +13,7 @@ const userClient = new TwitterApi({
 console.log("Initializing...");
 // tweettaus Funktio
 const tweet = async () => {
-  console.log("starting tweet program...");
+  console.log("Starting tweet program...");
   const response = await fetch(data);
   const fetchDataJson = await response.json();
   let temperatureData = [];
@@ -233,9 +233,11 @@ let tweetlog1 = () => {
 let tweetlog2 = () => {
   console.log("Second tweet in 15 seconds.");
 };
+// tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
+
 setInterval(tweetlog1, 890000);
 setInterval(tweet, 900000);
 setInterval(tweetlog2, 905000);
 setInterval(tweet2, 921002);
 
-// tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
+
