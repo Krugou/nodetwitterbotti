@@ -236,7 +236,7 @@ let tweetlog2 = () => {
 };
 // tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
 
-setInterval(tweetlog1, 850000);
-setInterval(tweet, 860000);
-setInterval(tweetlog2, 905000);
-setInterval(tweet2, 921002);
+setInterval(tweetlog1, 2100000);
+setInterval(tweet, 2160000);
+setInterval(tweetlog2, 2165000);
+setInterval(tweet2, 2180000);
