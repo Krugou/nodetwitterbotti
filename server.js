@@ -10,7 +10,27 @@ const userClient = new TwitterApi({
   accessToken: process.env.TWITTER_ACCESS_TOKEN,
   accessSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 });
-console.log("Initializing...");
+console.log(
+  "  _____      __      _    _____   ________    _____     ____     _____        _____    ______     _____      __      _      _____                  "
+);
+console.log(
+  " (_   _)    /      / )  (_   _) (___  ___)  (_   _)   (    )   (_   _)      (_   _)  (____  )   (_   _)    /      / )    / ___                  "
+);
+console.log(
+  "   | |     / /   / /     | |       ) )       | |     / /      | |          | |        / /      | |     / /   / /    / /   _)                "
+);
+console.log(
+  "   | |     ) ) ) ) ) )     | |      ( (        | |    ( (__) )    | |          | |    ___/ /_      | |     ) ) ) ) ) )   ( (  ____                 "
+);
+console.log(
+  "   | |    ( ( ( ( ( (      | |       ) )       | |     )    (     | |   __     | |   /__  ___)     | |    ( ( ( ( ( (    ( ( (__  )                "
+);
+console.log(
+  "  _| |__  / /   / /     _| |__    ( (       _| |__  /  /    __| |___) )   _| |__   / /____    _| |__  / /   / /      __/ /   __   __   __  "
+);
+console.log(
+  " /_____( (_/    __/     /_____(    /__     /_____( /__(  )__ ________/   /_____(  (_______)  /_____( (_/    __/       ____/   (__) (__) (__) "
+);
 // tweettaus Funktio
 const tweet = async () => {
   console.log("Starting tweet program...");
@@ -29,24 +49,25 @@ const tweet = async () => {
         fetchDataJson.beaches[i].url +
         ".json"
     );
-    console.log("Fetching First data (" + i + ") ...");
+    
     const fetchDataJson2 = await response.json();
-    const laskejsondata = fetchDataJson2.data.length - 1;
-    const jsonaika = new Date(fetchDataJson2.data[laskejsondata].time);
-    /*console.log("jsonaika: " + jsonaika.getTime());
+    const dataIndexNumber = fetchDataJson2.data.length - 1;
+    const dateDataJson = new Date(fetchDataJson2.data[dataIndexNumber].time);
+    /*console.log("dateDataJson: " + dateDataJson.getTime());
     console.log(
       "nykyinen aika - 7200000: " + (currentDate.getTime() - 7200000)
     );
     console.log("nykyinen aika: " + currentDate.getTime());
     */
     if (
-      jsonaika.getTime() > currentDate.getTime() - 7200000 &&
-      jsonaika.getTime() < currentDate.getTime()
+      dateDataJson.getTime() > currentDate.getTime() - 7200000 &&
+      dateDataJson.getTime() < currentDate.getTime()
     ) {
       let paikannimi = fetchDataJson2.meta.name;
-      let aikajsondata = fetchDataJson2.data[laskejsondata].time;
-      let waterTemperaturedata = fetchDataJson2.data[laskejsondata].temp_water;
-      let airTemperaturedata = fetchDataJson2.data[laskejsondata].temp_air;
+      let aikajsondata = fetchDataJson2.data[dataIndexNumber].time;
+      let waterTemperaturedata =
+        fetchDataJson2.data[dataIndexNumber].temp_water;
+      let airTemperaturedata = fetchDataJson2.data[dataIndexNumber].temp_air;
 
       temperatureData.push(waterTemperaturedata);
       placeNameData.push(paikannimi);
@@ -109,7 +130,7 @@ const tweet = async () => {
     " \xB0C  ja " +
     "Ilman lämpötila on " +
     airTemperature2 +
-    " \xB0C ";
+    " \xB0C #pääkaupunkiseutu";
 
   try {
     userClient.v2.tweet(tweetinglist2);
@@ -136,24 +157,25 @@ const tweet2 = async () => {
         fetchDataJson.beaches[i].url +
         ".json"
     );
-    console.log("Fetching second dataset (" + i + ") ...");
+    
     const fetchDataJson2 = await response.json();
-    const laskejsondata = fetchDataJson2.data.length - 1;
-    const jsonaika = new Date(fetchDataJson2.data[laskejsondata].time);
-    /*console.log("jsonaika: " + jsonaika.getTime());
+    const dataIndexNumber = fetchDataJson2.data.length - 1;
+    const dateDataJson = new Date(fetchDataJson2.data[dataIndexNumber].time);
+    /*console.log("dateDataJson: " + dateDataJson.getTime());
     console.log(
       "nykyinen aika - 7200000: " + (currentDate.getTime() - 7200000)
     );
     console.log("nykyinen aika: " + currentDate.getTime());
     */
     if (
-      jsonaika.getTime() > currentDate.getTime() - 7200000 &&
-      jsonaika.getTime() < currentDate.getTime()
+      dateDataJson.getTime() > currentDate.getTime() - 7200000 &&
+      dateDataJson.getTime() < currentDate.getTime()
     ) {
       let paikannimi = fetchDataJson2.meta.name;
-      let aikajsondata = fetchDataJson2.data[laskejsondata].time;
-      let waterTemperaturedata = fetchDataJson2.data[laskejsondata].temp_water;
-      let airTemperaturedata = fetchDataJson2.data[laskejsondata].temp_air;
+      let aikajsondata = fetchDataJson2.data[dataIndexNumber].time;
+      let waterTemperaturedata =
+        fetchDataJson2.data[dataIndexNumber].temp_water;
+      let airTemperaturedata = fetchDataJson2.data[dataIndexNumber].temp_air;
 
       temperatureData.push(waterTemperaturedata);
       placeNameData.push(paikannimi);
@@ -217,7 +239,7 @@ const tweet2 = async () => {
     " \xB0C  ja " +
     "Ilman lämpötila on " +
     airTemperature +
-    " \xB0C ";
+    " \xB0C #pääkaupunkiseutu";
 
   try {
     userClient.v2.tweet(tweetinglist);
@@ -228,15 +250,5 @@ const tweet2 = async () => {
   console.log("Second Tweeting sequence finished.");
   console.log("Tweet program complete reload in about 35 minutes...");
 };
-let tweetlog1 = () => {
-  console.log("First tweet in 10 seconds.");
-};
-let tweetlog2 = () => {
-  console.log("Second tweet in 15 seconds.");
-};
-// tweettauksen yritys joka 15min koska data muuttuu vaan 30min välein botti onnistuu tweettauksessa vaan 30min välein
-
-setInterval(tweetlog1, 2100000);
-setInterval(tweet, 2160000);
-setInterval(tweetlog2, 2165000);
-setInterval(tweet2, 2180000);
+setInterval(tweet, 2100000);
+setInterval(tweet2, 2700000);
