@@ -73,11 +73,11 @@ const tweet = async () => {
       placeNameData.push(paikannimi);
       airTemperatureData.push(airTemperaturedata);
       timeTakenData.push(aikajsondata);
-      /* console.log(paikannimi);
+       console.log(paikannimi);
       console.log(aikajsondata);
       console.log(waterTemperaturedata);
       console.log(airTemperaturedata);
-      */
+      
     } else {
       continue;
     }
@@ -181,11 +181,11 @@ const tweet2 = async () => {
       placeNameData.push(paikannimi);
       airTemperatureData.push(airTemperaturedata);
       timeTakenData.push(aikajsondata);
-      /* console.log(paikannimi);
+       console.log(paikannimi);
       console.log(aikajsondata);
       console.log(waterTemperaturedata);
       console.log(airTemperaturedata);
-      */
+      
     } else {
       continue;
     }
