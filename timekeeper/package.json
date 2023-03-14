@@ -1,0 +1,32 @@
+{
+	"name": "jakbot",
+	"version": "1.0.0",
+	"description": "asd",
+	"main": "jak-bot.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "asd"
+	},
+	
+	"type": "module",
+	"author": "Aleksi",
+	"license": "ISC",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"discord-reply": "^0.1.2",
+		"discord.js": "^14.7.1",
+		"dotenv": "^16.0.3",
+		"ejs": "^3.1.8",
+		"express": "^4.18.2",
+		"express-validator": "^6.14.2",
+		"fs": "^0.0.1-security",
+		"https": "^1.0.0",
+		"jsonwebtoken": "^8.5.1",
+		"node-fetch": "^3.3.0",
+		"nodemon": "^2.0.20",
+		"path": "^0.12.7"
+	}
+}
