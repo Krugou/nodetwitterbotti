@@ -11,8 +11,16 @@ jakbot.once(Events.ClientReady, c => {
     // console.log(`Ready! Logged in as ${c.user.tag}`);
 
 });
-jakbot.on('ready', jakbot => {
 
+
+jakbot.on('ready', jakbot => {
+    const channel = jakbot.channels.cache.get(channelID);
+    channel.messages.fetch({ limit: 10 })
+        .then(messages => {
+            // Delete the messages
+            channel.bulkDelete(messages);
+        })
+        .catch(console.error);
     jakbot.user.setUsername('TimeKeeper');
     jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
     // if today is monday
