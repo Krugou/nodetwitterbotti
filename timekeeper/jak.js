@@ -51,9 +51,10 @@ const checkReservations = () => {
       })
       .then(data => {
         const today = new Date();
+        jakbot.channels.cache.get(channelID).send('Date Today: ' + today.toISOString().substring(0, 10));
         jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
 
-        jakbot.channels.cache.get(channelID).send('Date Today: ' + today.getDate.toString());
+
 
         for (let i = 0; i < data.reservations.length; i++) {
           const dateStr = data.reservations[i].startDate;
@@ -79,14 +80,14 @@ const checkReservations = () => {
             jakbot.channels.cache.get(channelID).send('Subject: ' + data.reservations[i].subject);
             jakbot.channels.cache.get(channelID).send('Start Time: ' + time);
             jakbot.channels.cache.get(channelID).send('End Time: ' + endTime);
-            jakbot.channels.cache.get(channelID).send(`This is subject ${currentSubjectIndex}/${subjectsCount}.`);
+            jakbot.channels.cache.get(channelID).send(`Count: ${currentSubjectIndex}/${subjectsCount}.`);
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
             if (room) {
               const roomName = room.code;
-              jakbot.channels.cache.get(channelID).send(`The reservation is for room: ${roomName}`);
+              jakbot.channels.cache.get(channelID).send(`Room: ${roomName}`);
             } else {
-              jakbot.channels.cache.get(channelID).send('The reservation is for remote teaching.');
+              jakbot.channels.cache.get(channelID).send('Remote teaching.');
             }
             jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
 
