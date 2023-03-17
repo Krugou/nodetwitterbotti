@@ -54,6 +54,7 @@ const onlineChecker = () => {
 setInterval(deleteMessages, 21600000);
 // every 2 hours in ms 7200000
 setInterval(onlineChecker, 7200000);
+deleteMessages();
 onlineChecker();
 
 
