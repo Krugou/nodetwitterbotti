@@ -81,6 +81,7 @@ const checkReservations = () => {
             jakbot.channels.cache.get(channelID).send('Start Time: ' + time);
             jakbot.channels.cache.get(channelID).send('End Time: ' + endTime);
             jakbot.channels.cache.get(channelID).send(`Count: ${currentSubjectIndex}/${subjectsCount}.`);
+            jakbot.channels.cache.get(channelID).send('Left: ' + (subjectsCount - currentSubjectIndex - 1) + ' 3 hour classes.');
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
             if (room) {
