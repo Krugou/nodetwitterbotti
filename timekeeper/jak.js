@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 
 const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
 const channelID = '1084944685568638976';
+const logs = '1087029247501152297'
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
@@ -32,7 +33,7 @@ jakbot.on('ready', jakbot => {
   }
 });
 
-const checkReservations = () => {
+const checkReservations = (channelID) => {
   jakbot.on('ready', jakbot => {
 
 
@@ -125,7 +126,9 @@ const checkReservations = () => {
   });
 };
 
-checkReservations();
+checkReservations(channelID);
+checkReservations(logs);
+
 
 
 
