@@ -54,7 +54,7 @@ const checkReservations = () => {
         jakbot.channels.cache.get(channelID).send('Date Today: ' + today.toISOString().substring(0, 10));
         jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
 
-
+        let totalHoursLeft = 0; // declare a variable to keep track of total hours left
 
         for (let i = 0; i < data.reservations.length; i++) {
           const dateStr = data.reservations[i].startDate;
@@ -63,16 +63,31 @@ const checkReservations = () => {
           // check if the reservation is between today and five days from now
           const fiveDaysFromNow = new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000);
           const isBetweenTodayAndFiveDaysFromNow = date >= today && date <= fiveDaysFromNow;
+          // const from date > today && date <  end of the year
+          const betweenNowAndInfinite = date >= today;
 
+          if (betweenNowAndInfinite) {
+
+            const endDate1 = data.reservations[i].endDate;
+            const endTime1 = endDate1.substring(11, 16);
+            const time1 = dateStr.substring(11, 16);
+            const date1 = dateStr.substring(0, 10);
+            const startDateTime1 = new Date(dateStr);
+            const endDateTime1 = new Date(endDate1);
+            const hoursDiff = (endDateTime1 - startDateTime1) / 3600000;
+            // add up the hours for the current reservation
+            totalHoursLeft += hoursDiff;
+          }
           // loop if StartDate is today for reservation or tomorrow for reservation
           if (isBetweenTodayAndFiveDaysFromNow) {
+
             const endDate = data.reservations[i].endDate;
             const endTime = endDate.substring(11, 16);
-            // get time from startDate
             const time = dateStr.substring(11, 16);
-            // get time from endDate
-            // get date from startDate
             const date = dateStr.substring(0, 10);
+            const startDateTime = new Date(dateStr);
+            const endDateTime = new Date(endDate);
+            const hoursDiff = (endDateTime - startDateTime) / 3600000;
             const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
             const currentSubjectIndex = i; // Get the index of the current subject in the response
             jakbot.channels.cache.get(channelID).send('Reservation ID: ' + data.reservations[i].id);
@@ -81,7 +96,9 @@ const checkReservations = () => {
             jakbot.channels.cache.get(channelID).send('Start Time: ' + time);
             jakbot.channels.cache.get(channelID).send('End Time: ' + endTime);
             jakbot.channels.cache.get(channelID).send(`Count: ${currentSubjectIndex}/${subjectsCount}.`);
-            jakbot.channels.cache.get(channelID).send('Left: ' + (subjectsCount - currentSubjectIndex - 1) + ' -  3 hour classes.');
+            jakbot.channels.cache.get(channelID).send('Left:  ' + (subjectsCount - currentSubjectIndex - 1));
+            jakbot.channels.cache.get(channelID).send('Duration: ' + hoursDiff.toFixed(2) + ' hours');
+
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
             if (room) {
@@ -93,7 +110,9 @@ const checkReservations = () => {
             jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
 
           }
+
         }
+        jakbot.channels.cache.get(channelID).send(`Total hours left: ${totalHoursLeft}`); // log or send a message with the total hours left
 
 
       }
