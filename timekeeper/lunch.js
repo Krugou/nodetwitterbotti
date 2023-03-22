@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 
 const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
 const channelIDKaramalmi = '1087689568549097567';
+const channelIDKaramalmilogs = '1088015207210696714';
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
@@ -34,28 +35,28 @@ jakbot.on('ready', jakbot => {
 
 
 
-const checkMenu = (id, language) => {
+const checkMenu = (id, language, channelID) => {
   jakbot.on('ready', jakbot => {
     fetch('https://www.compass-group.fi/menuapi/feed/json?costNumber=' + id + '&language=' + language)
       .then(response => {
         return response.json();
       })
       .then(data => {
-        jakbot.channels.cache.get(channelIDKaramalmi).send('Restaurant name: ' + data.RestaurantName);
-        jakbot.channels.cache.get(channelIDKaramalmi).send('Date: ' + data.MenusForDays[0].Date);
-        jakbot.channels.cache.get(channelIDKaramalmi).send('LunchTime: ' + data.MenusForDays[0].LunchTime);
+        jakbot.channels.cache.get(channelID).send('Restaurant name: ' + data.RestaurantName);
+        jakbot.channels.cache.get(channelID).send('Date: ' + data.MenusForDays[0].Date);
+        jakbot.channels.cache.get(channelID).send('LunchTime: ' + data.MenusForDays[0].LunchTime);
 
-        jakbot.channels.cache.get(channelIDKaramalmi).send('Url to the Restaurant: ' + data.RestaurantUrl);
-        jakbot.channels.cache.get(channelIDKaramalmi).send(data.Footer);
-        jakbot.channels.cache.get(channelIDKaramalmi).send('------------------------------------------------------------------');
+        jakbot.channels.cache.get(channelID).send('Url to the Restaurant: ' + data.RestaurantUrl);
+        jakbot.channels.cache.get(channelID).send(data.Footer);
+        jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
         for (let j = 0; j < data.MenusForDays[0].SetMenus.length; j++) {
           for (let i = 0; i < data.MenusForDays[0].SetMenus[j].Components.length; i++) {
-            jakbot.channels.cache.get(channelIDKaramalmi).send(data.MenusForDays[0].SetMenus[j].Components[i]);
+            jakbot.channels.cache.get(channelID).send(data.MenusForDays[0].SetMenus[j].Components[i]);
           }
-          jakbot.channels.cache.get(channelIDKaramalmi).send('prices: ' + data.MenusForDays[0].SetMenus[j].Price);
-          jakbot.channels.cache.get(channelIDKaramalmi).send('------------------------------------------------------------------');
+          jakbot.channels.cache.get(channelID).send('prices: ' + data.MenusForDays[0].SetMenus[j].Price);
+          jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
         }
-        jakbot.channels.cache.get(channelIDKaramalmi).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
+        jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
       });
   });
 };
@@ -65,4 +66,5 @@ const checkMenu = (id, language) => {
 
 
 
-checkMenu(3208, 'fi');
+checkMenu(3208, 'fi', channelIDKaramalmi);
+checkMenu(3208, 'fi', channelIDKaramalmilogs);
