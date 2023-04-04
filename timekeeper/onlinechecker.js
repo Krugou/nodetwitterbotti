@@ -21,13 +21,13 @@ const deleteMessages = () => {
             })
             .catch(console.error);
     });
-}
+};
 
 const onlineChecker = () => {
     jakbot.on('ready', jakbot => {
         jakbot.user.setUsername('Onlinechecker');
         jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
-// check if https://media.mw.metropolia.fi/wbma/media/ is online
+        // check if https://media.mw.metropolia.fi/wbma/media/ is online
         fetch('https://media.mw.metropolia.fi/wbma/media/', {
             method: 'GET',
             headers: {
@@ -43,17 +43,14 @@ const onlineChecker = () => {
                     send('https://media.mw.metropolia.fi/wbma/media/ is online');
             })
             .catch(error => {
-                jakbot.channels.cache.get(channelID). 
+                jakbot.channels.cache.get(channelID).
                     send('https://media.mw.metropolia.fi/wbma/media/ is offline');
             });
-        
-  
+
+
     });
 };
-// every 6 hours in ms 21600000
-setInterval(deleteMessages, 21600000);
-// every 2 hours in ms 7200000
-setInterval(onlineChecker, 7200000);
+
 deleteMessages();
 onlineChecker();
 

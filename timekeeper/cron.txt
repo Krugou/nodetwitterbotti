@@ -1,0 +1,23 @@
+# Restart PM2 server every hour
+*/60 * * * * cd /root/nodetwitterbotti && pm2 restart server >/dev/null 2>&1
+
+# Restart PM2 jak process at 5 am every weekday
+0 4 * * 1-5 cd /root/nodetwitterbotti/timekeeper && pm2 start jak --time 3600 >/dev/null 2>&1
+
+# Restart PM2 lunch process at 7 am every weekday
+0 6 * * 1-5 cd /root/nodetwitterbotti/timekeeper && pm2 start lunch --time 3600 >/dev/null 2>&1
+
+# Restart PM2 onlinechecker process every 3 hours
+0 */3 * * * cd /root/nodetwitterbotti/timekeeper && pm2 start onlinechecker --time 3600 >/dev/null 2>&1
+
+# Restart PM2 weather process at 5 am, 8 am, and 12 pm on week days
+0 5,8,12 * * 1-5 cd /root/nodetwitterbotti/timekeeper && pm2 start weather --time 3600 >/dev/null 2>&1
+
+pm2 start weather.js --cron-restart="0 5,8,12 * * 1-5" --watch
+pm2 start jak.js --cron-restart="0 4 * * 1-5" --watch
+pm2 start lunch.js --cron-restart="0 6 * * 1-5" --watch
+pm2 start onlinechecker.js --cron-restart="0 */3 * * *" --watch
+
+pm2 start server.js --cron-restart="*/60 * * * *" --watch
+
+

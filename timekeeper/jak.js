@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 
 const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
 const channelID = '1084944685568638976';
-const logs = '1087029247501152297'
+const logs = '1087029247501152297';
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
@@ -33,7 +33,7 @@ jakbot.on('ready', jakbot => {
   }
 });
 
-const checkReservations = (channelID) => {
+const checkReservations = (channelID, nameofgroup) => {
   jakbot.on('ready', jakbot => {
 
 
@@ -44,7 +44,7 @@ const checkReservations = (channelID) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "studentGroup": ["tvt21-m"]
+        "studentGroup": [nameofgroup]
       })
     })
       .then(response => {
@@ -126,7 +126,8 @@ const checkReservations = (channelID) => {
   });
 };
 
-checkReservations(channelID);
+
+checkReservations(channelID, "tvt21-pe");
 checkReservations(logs);
 
 
