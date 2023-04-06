@@ -53,7 +53,7 @@ const checkReservations = (channelID, nameofgroup) => {
       .then(data => {
         const today = new Date();
         jakbot.channels.cache.get(channelID).send('Date Today: ' + today.toISOString().substring(0, 10));
-        jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
+
 
         let totalHoursLeft = 0; // declare a variable to keep track of total hours left
 
@@ -91,14 +91,7 @@ const checkReservations = (channelID, nameofgroup) => {
             const hoursDiff = (endDateTime - startDateTime) / 3600000;
             const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
             const currentSubjectIndex = i; // Get the index of the current subject in the response
-            jakbot.channels.cache.get(channelID).send('Reservation ID: ' + data.reservations[i].id);
-            jakbot.channels.cache.get(channelID).send('Date: ' + date);
-            jakbot.channels.cache.get(channelID).send('Subject: ' + data.reservations[i].subject);
-            jakbot.channels.cache.get(channelID).send('Start Time: ' + time);
-            jakbot.channels.cache.get(channelID).send('End Time: ' + endTime);
-            jakbot.channels.cache.get(channelID).send(`Count: ${currentSubjectIndex}/${subjectsCount}.`);
-            jakbot.channels.cache.get(channelID).send('Left:  ' + (subjectsCount - currentSubjectIndex - 1));
-            jakbot.channels.cache.get(channelID).send('Duration: ' + hoursDiff.toFixed(2) + ' hours');
+            jakbot.channels.cache.get(channelID).send('-- \n Reservation ID: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + '\n ');
 
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
@@ -108,7 +101,7 @@ const checkReservations = (channelID, nameofgroup) => {
             } else {
               jakbot.channels.cache.get(channelID).send('Remote teaching.');
             }
-            jakbot.channels.cache.get(channelID).send('------------------------------------------------------------------');
+
 
           }
 
@@ -127,7 +120,7 @@ const checkReservations = (channelID, nameofgroup) => {
 };
 
 
-checkReservations(channelID, "tvt21-pe");
+checkReservations(channelID, "tvt21-m");
 checkReservations(logs);
 
 

@@ -112,13 +112,19 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
                     }
                     if (paramName === 'temperature' && i === (hoursfromnow * 3) - 3) {
                         const paramValue = elements[i].getElementsByTagName('BsWfs:ParameterValue')[0].textContent;
-
+                        if (paramValue > 0) {
+                            jakbot.channels.cache.get(CHANNELID).send('' + paramValue + ' °C lämpöä');
+                        } else if (paramValue < 0) {
+                            jakbot.channels.cache.get(CHANNELID).send('' + paramValue + ' °C pakkasta');
+                        } else if (paramValue === 0) {
+                            jakbot.channels.cache.get(CHANNELID).send('' + paramValue + ' °C');
+                        }
                         jakbot.channels.cache.get(CHANNELID).send('' + paramValue + ' °C');
                     }
                     if (paramName === 'windSpeedMS' && i === (hoursfromnow * 3) - 2) {
                         const paramValue = elements[i].getElementsByTagName('BsWfs:ParameterValue')[0].textContent;
 
-                        jakbot.channels.cache.get(CHANNELID).send('' + paramValue + ' ms');
+                        jakbot.channels.cache.get(CHANNELID).send('tuuli ' + paramValue + ' metriä sekunnissa');
                     }
 
                 }
