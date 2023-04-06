@@ -22,8 +22,8 @@ jakbot.on('ready', jakbot => {
       channel.bulkDelete(messages);
     })
     .catch(console.error);
-  // jakbot.user.setUsername('TimeKeeper');
-  // jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
+  jakbot.user.setUsername('TimeKeeper');
+  jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
   // if today is monday
   const today = new Date();
   const day = today.getDay();
