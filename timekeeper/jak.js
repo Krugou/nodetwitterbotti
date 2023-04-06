@@ -22,8 +22,8 @@ jakbot.on('ready', jakbot => {
       channel.bulkDelete(messages);
     })
     .catch(console.error);
-  jakbot.user.setUsername('TimeKeeper');
-  jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
+  // jakbot.user.setUsername('TimeKeeper');
+  // jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
   // if today is monday
   const today = new Date();
   const day = today.getDay();
@@ -52,9 +52,14 @@ const checkReservations = (channelID, nameofgroup) => {
       })
       .then(data => {
         const today = new Date();
-        jakbot.channels.cache.get(channelID).send('Date Today: ' + today.toISOString().substring(0, 10));
-
-
+        jakbot.channels.cache.get(channelID).send('-- \n Date Today: ' + today.toISOString().substring(0, 10));
+        // get date from last reservation
+        const lastReservation = data.reservations[data.reservations.length - 1];
+        const lastReservationDate = new Date(lastReservation.startDate);
+        // days until last reservation
+        const daysUntilLastReservation = (lastReservationDate - today) / 1000 / 60 / 60 / 24;
+        // mathfloor to get the whole number
+        const daysUntilLastReservationRounded = Math.floor(daysUntilLastReservation);
         let totalHoursLeft = 0; // declare a variable to keep track of total hours left
 
         for (let i = 0; i < data.reservations.length; i++) {
@@ -97,16 +102,16 @@ const checkReservations = (channelID, nameofgroup) => {
             const room = resources.find(resource => resource.type === 'room');
             if (room) {
               const roomName = room.code;
-              jakbot.channels.cache.get(channelID).send(`Room: ${roomName}`);
+              jakbot.channels.cache.get(channelID).send(` -- \n Room: ${roomName}`);
             } else {
-              jakbot.channels.cache.get(channelID).send('Remote teaching.');
+              jakbot.channels.cache.get(channelID).send('-- \n Remote teaching.');
             }
 
 
           }
 
         }
-        jakbot.channels.cache.get(channelID).send(`Total hours left: ${totalHoursLeft}`); // log or send a message with the total hours left
+        jakbot.channels.cache.get(channelID).send(`-- \n Total hours left: ${totalHoursLeft} \n total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
 
 
       }
