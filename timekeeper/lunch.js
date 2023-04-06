@@ -47,8 +47,9 @@ const checkMenu = (id, language, channelID) => {
           for (let i = 0; i < data.MenusForDays[0].SetMenus[j].Components.length; i++) {
             jakbot.channels.cache.get(channelID).send('-- \n ' + data.MenusForDays[0].SetMenus[j].Components[i] + '\n prices: ' + data.MenusForDays[0].SetMenus[j].Price);
           }
-          jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
+         
         }
+         jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
       });
   });
 };
