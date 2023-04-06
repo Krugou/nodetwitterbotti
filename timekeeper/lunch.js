@@ -45,9 +45,10 @@ const checkMenu = (id, language, channelID) => {
         jakbot.channels.cache.get(channelID).send(' -- \n Restaurant name: ' + data.RestaurantName + '\n Date: ' + data.MenusForDays[0].Date + '\n LunchTime: ' + data.MenusForDays[0].LunchTime + '\n Url to the Restaurant: ' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
         for (let j = 0; j < data.MenusForDays[0].SetMenus.length; j++) {
           for (let i = 0; i < data.MenusForDays[0].SetMenus[j].Components.length; i++) {
-            jakbot.channels.cache.get(channelID).send('-- \n ' + data.MenusForDays[0].SetMenus[j].Components[i] + '\n prices: ' + data.MenusForDays[0].SetMenus[j].Price);
+            jakbot.channels.cache.get(channelID).send(data.MenusForDays[0].SetMenus[j].Components[i]);
           }
-         
+          jakbot.channels.cache.get(channelID).send('\n prices: ' + data.MenusForDays[0].SetMenus[j].Price);
+
         }
         jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
       });
