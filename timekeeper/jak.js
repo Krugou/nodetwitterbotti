@@ -61,7 +61,7 @@ const checkReservations = (channelID, nameofgroup) => {
         // mathfloor to get the whole number
         const daysUntilLastReservationRounded = Math.floor(daysUntilLastReservation);
         let totalHoursLeft = 0; // declare a variable to keep track of total hours left
-        let noReservationsMessage = ["-- \n Looks like a black hole just appeared and swallowed all the reservations in the future. Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!"];
+
 
         for (let i = 0; i < data.reservations.length; i++) {
           const dateStr = data.reservations[i].startDate;
@@ -84,14 +84,9 @@ const checkReservations = (channelID, nameofgroup) => {
             const hoursDiff = (endDateTime1 - startDateTime1) / 3600000;
             // add up the hours for the current reservation
             totalHoursLeft += hoursDiff;
-          } else {
-            // if noreservationsmessage[i] is undefined do nothing
-            if (noReservationsMessage[i] === undefined) {
-
-            } else {
-              jakbot.channels.cache.get(channelID).send(noReservationsMessage[i]);
-            }
           }
+
+
           // loop if StartDate is today for reservation or tomorrow for reservation
           if (isBetweenTodayAndFiveDaysFromNow) {
 
@@ -116,16 +111,17 @@ const checkReservations = (channelID, nameofgroup) => {
             }
 
 
-          } else {
-            jakbot.channels.cache.get(channelID).send('-- \n Looks like you have a lot of free time in five days...or forever! Time to plan that spontaneous trip to the couch ');
           }
 
         }
         jakbot.channels.cache.get(channelID).send(`-- \n Total hours left: ${totalHoursLeft} \n total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
 
 
-      }
-      )
+        if (data.reservations.length === 0) {
+          jakbot.channels.cache.get(channelID).send("-- \n Looks like a black hole just appeared and swallowed all the reservations in the future.Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
+
+        }
+      })
       .catch(err => {
         console.log(err);
       });
