@@ -99,22 +99,23 @@ const checkReservations = (channelID, nameofgroup) => {
             const hoursDiff = (endDateTime - startDateTime) / 3600000;
             const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
             const currentSubjectIndex = i; // Get the index of the current subject in the response
-            jakbot.channels.cache.get(channelID).send('-- \n Reservation ID: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + '\n ');
-
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
-            if (room) {
-              const roomName = room.code;
-              jakbot.channels.cache.get(channelID).send(` -- \n Room: ${roomName}`);
-            } else {
-              jakbot.channels.cache.get(channelID).send('-- \n Remote teaching.');
-            }
+            jakbot.channels.cache.get(channelID).send('-- \n Reservation ID: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' +  (room ? ` \n Room: ${room.code}` : '\n Remote teaching.'));
+
+
+            // if (room) {
+            //   const roomName = room.code;
+            //   jakbot.channels.cache.get(channelID).send(` -- \n Room: ${roomName}`);
+            // } else {
+            //   jakbot.channels.cache.get(channelID).send('-- \n Remote teaching.');
+            // }
 
 
           }
 
         }
-        jakbot.channels.cache.get(channelID).send(`-- \n Total hours left: ${totalHoursLeft} \n total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
+        jakbot.channels.cache.get(channelID).send(`-- \n Total hours left: ${totalHoursLeft} \n Total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
 
 
         if (data.reservations.length === 0) {
