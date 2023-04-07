@@ -9,7 +9,7 @@ const channelIDKaramalmilogs = '1088834182018519170';
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
-    console.log(`Ready! Logged in as ${c.user.tag}`);
+    // console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
 
@@ -32,8 +32,10 @@ jakbot.on('ready', jakbot => {
     }
 });
 
+
 const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
-    let weatherData = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple&latlon=' + lat + ',' + lon + '&parameters=temperature,windSpeedMS,WeatherSymbol3';
+    const weatherData = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple&latlon=' + lat + ',' + lon + '&parameters=temperature,windSpeedMS,WeatherSymbol3';
+
     jakbot.on('ready', jakbot => {
         fetch(weatherData)
             .then(response => {
@@ -42,7 +44,8 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
             .then(xml => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(xml, 'application/xml');
-                jakbot.channels.cache.get(CHANNELID).send(' karamalmin säätiedotus: ');
+                let message = '\0 \n Karamalmin säätiedotus:';
+
                 const elements = doc.getElementsByTagName('BsWfs:BsWfsElement');
                 for (let i = 0; i < elements.length; i++) {
                     const paramName = elements[i].getElementsByTagName('BsWfs:ParameterName')[0].textContent;
@@ -108,26 +111,22 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
                         } else {
                             weather = 'tuntematon';
                         }
-                        jakbot.channels.cache.get(CHANNELID).send('' + weather);
+                        message += '\0 \n'+ ' ' + weather;
                     }
                     if (paramName === 'temperature' && i === (hoursfromnow * 3) - 3) {
                         const paramValue = elements[i].getElementsByTagName('BsWfs:ParameterValue')[0].textContent;
-
-                        jakbot.channels.cache.get(CHANNELID).send('' + paramValue + ' °C');
+                        message += ' ' + paramValue + ' °C';
                     }
                     if (paramName === 'windSpeedMS' && i === (hoursfromnow * 3) - 2) {
                         const paramValue = elements[i].getElementsByTagName('BsWfs:ParameterValue')[0].textContent;
-
-                        jakbot.channels.cache.get(CHANNELID).send('tuuli ' + paramValue + ' metriä sekunnissa');
+                        message += ' \0 \n tuuli ' + paramValue + ' metriä sekunnissa';
                     }
-
                 }
 
-            }
-            );
+                jakbot.channels.cache.get(CHANNELID).send(message);
+            });
     });
 };
-
 checkWeather(60.22400971717999, 24.758507994251243, 1, channelIDKaramalmi);
 checkWeather(60.22400971717999, 24.758507994251243, 1, channelIDKaramalmilogs);
 
