@@ -50,9 +50,20 @@ const onlineChecker = () => {
                 return response.json();
             })
             .then(data => {
+                /*{
+    file_id: 8041,
+    filename: '2e9dd874a5ba1e19e2119fd911eaea42.jpg',
+    filesize: 105812,
+    title: '',
+    description: '{"desc":"","filters":{"brightness":193,"contrast":175,"saturation":154,"sepia":1}}',
+    user_id: 3471,
+    media_type: 'image',
+    mime_type: 'image/jpeg',
+    time_added: '2023-04-06T08:58:06.000Z'
+  }, */
                 // for loop to send all files
                 for (let i = 0; i < data.length; i++) {
-                    jakbot.channels.cache.get(showcase).send(' \0 \n https://media.mw.metropolia.fi/wbma/uploads/' + data[i].filename + ' \n ' + data[i].description + ' \n ' + data[i].title);
+                    jakbot.channels.cache.get(showcase).send(' \0 \n https://media.mw.metropolia.fi/wbma/uploads/' + data[i].filename + ' \n ' + data[i].description + ' \n ' + data[i].title + ' \n ' + data[i].time_added + ' \n ' + data[i].mime_type + ' \n ' + data[i].media_type + ' \n ' + data[i].user_id + ' \n ' + data[i].filesize + ' \n ' + data[i].file_id + ' \n ' + data[i].filename + ' \n ' );
                 }
                 jakbot.channels.cache.get(channelID).
                     send(' \0 \n https://media.mw.metropolia.fi/wbma/media/ is online \n ');
