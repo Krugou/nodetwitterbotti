@@ -36,7 +36,7 @@ const deleteMessages = () => {
 
 const onlineChecker = () => {
     jakbot.on('ready', jakbot => {
-        // jakbot.user.setUsername('Onlinechecker');
+        jakbot.user.setUsername('Onlinechecker');
         jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
         // check if https://media.mw.metropolia.fi/wbma/media/ is online
         fetch('https://media.mw.metropolia.fi/wbma/media/', {
