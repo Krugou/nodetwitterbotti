@@ -28,7 +28,7 @@ jakbot.on('ready', jakbot => {
     const day = today.getDay();
     if (day === 1) {
         jakbot.channels.cache.get(channelIDKaramalmi).
-            send('Hello, I am the WeatherMan');
+            send(" \0 \n Hello, I am the WeatherMan! I'm here to give you the forecast for the only weather that matters - the weather in your school area! Whether it's raining cats and dogs, or so hot you could fry an egg on the sidewalk, I'll keep you informed.And don't worry, I'll throw in some puns to lighten the mood, like 'Looks like we're in for a real 'rain-deer' situation today!' or 'It's so hot, even the sun is sweating!' So, let's make this week weather-tastic! Have an umbrella, just in case!");
     }
 });
 

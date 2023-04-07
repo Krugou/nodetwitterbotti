@@ -29,7 +29,7 @@ jakbot.on('ready', jakbot => {
   const day = today.getDay();
   if (day === 1) {
     jakbot.channels.cache.get(channelIDKaramalmi).
-      send('Hello, I am the LunchKeeper,   have a nice week!');
+      send(" \0 \n Hello, I am the LunchKeeper! I'm here to make sure you don't go hungry while you learn. Today's menu includes culinary masterpieces such as mystery meatloaf, unidentifiable vegetable medley, and a side of tater tots.Don't worry, it's all edible...I think.Have a nice week, and may the odds be ever in your flavor!");
   }
 });
 
@@ -42,12 +42,12 @@ const checkMenu = (id, language, channelID) => {
         return response.json();
       })
       .then(data => {
-        jakbot.channels.cache.get(channelID).send(' -- \n Restaurant name: ' + data.RestaurantName + '\n Date: ' + data.MenusForDays[0].Date + '\n LunchTime: ' + data.MenusForDays[0].LunchTime + '\n Url to the Restaurant: ' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
+        jakbot.channels.cache.get(channelID).send(' \0 \n Nimi: ' + data.RestaurantName + '\n Päiväys: ' + data.MenusForDays[0].Date + '\n Lounasaika: ' + data.MenusForDays[0].LunchTime + '\n Linkki:' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
         for (let j = 0; j < data.MenusForDays[0].SetMenus.length; j++) {
           for (let i = 0; i < data.MenusForDays[0].SetMenus[j].Components.length; i++) {
             jakbot.channels.cache.get(channelID).send(data.MenusForDays[0].SetMenus[j].Components[i]);
           }
-          jakbot.channels.cache.get(channelID).send('\n prices: ' + data.MenusForDays[0].SetMenus[j].Price);
+          jakbot.channels.cache.get(channelID).send('\n Hinnat: ' + data.MenusForDays[0].SetMenus[j].Price+'€');
 
         }
         jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');

@@ -40,11 +40,11 @@ const onlineChecker = () => {
             })
             .then(data => {
                 jakbot.channels.cache.get(channelID).
-                    send('https://media.mw.metropolia.fi/wbma/media/ is online');
+                    send(' \0 \n https://media.mw.metropolia.fi/wbma/media/ is online');
             })
             .catch(error => {
                 jakbot.channels.cache.get(channelID).
-                    send('https://media.mw.metropolia.fi/wbma/media/ is offline');
+                    send(' \0 \n https://media.mw.metropolia.fi/wbma/media/ is offline');
             });
 
 

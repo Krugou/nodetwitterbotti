@@ -29,7 +29,7 @@ jakbot.on('ready', jakbot => {
   const day = today.getDay();
   if (day === 1) {
     jakbot.channels.cache.get(channelID).
-      send('Hello, I am the TimeKeeper, I will keep track of current time and remind you when we have a classes coming up! have a nice week!');
+      send(" \0 \n Hello, I am the TimeKeeper! I'm your trusty sidekick in the battle against tardiness.My circuits are synced to the atomic clock, so I always know what time it is.And don't worry about keeping track of your class schedule, I've got it covered! I'll beep-boop you a friendly reminder when it's time to stop slacking off and start learning. Now, let's make this week as productive as a robot on a caffeine high! Bzzt!");
   }
 });
 
@@ -51,8 +51,9 @@ const checkReservations = (channelID, nameofgroup) => {
         return response.json();
       })
       .then(data => {
+
         const today = new Date();
-        jakbot.channels.cache.get(channelID).send('-- \n Date Today: ' + today.toISOString().substring(0, 10));
+        jakbot.channels.cache.get(channelID).send('\0 \n Date Today: ' + today.toISOString().substring(0, 10));
         // get date from last reservation
         const lastReservation = data.reservations[data.reservations.length - 1];
         const lastReservationDate = new Date(lastReservation.startDate);
@@ -101,7 +102,7 @@ const checkReservations = (channelID, nameofgroup) => {
             const currentSubjectIndex = i; // Get the index of the current subject in the response
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
-            jakbot.channels.cache.get(channelID).send('-- \n Reservation ID: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' +  (room ? ` \n Room: ${room.code}` : '\n Remote teaching.'));
+            jakbot.channels.cache.get(channelID).send('\0 \n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
 
 
             // if (room) {
@@ -115,11 +116,11 @@ const checkReservations = (channelID, nameofgroup) => {
           }
 
         }
-        jakbot.channels.cache.get(channelID).send(`-- \n Total hours left: ${totalHoursLeft} \n Total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
+        jakbot.channels.cache.get(channelID).send(`\0 \n Total hours left: ${totalHoursLeft} \n Total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
 
 
         if (data.reservations.length === 0) {
-          jakbot.channels.cache.get(channelID).send("-- \n Looks like a black hole just appeared and swallowed all the reservations in the future.Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
+          jakbot.channels.cache.get(channelID).send("\0 \n Looks like a black hole just appeared and swallowed all the reservations in the future.Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
 
         }
       })
