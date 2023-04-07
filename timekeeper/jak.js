@@ -116,7 +116,7 @@ const checkReservations = (channelID, nameofgroup) => {
           }
 
         }
-        jakbot.channels.cache.get(channelID).send(`\0 \n Total hours left: ${totalHoursLeft} \n Total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
+        jakbot.channels.cache.get(channelID).send(`\0 \n Total curriculum hours left: ${totalHoursLeft} \n Total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
 
 
         if (data.reservations.length === 0) {
