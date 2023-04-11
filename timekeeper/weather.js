@@ -111,7 +111,7 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
                         } else {
                             weather = 'tuntematon';
                         }
-                        message += '\0 \n'+ ' ' + weather;
+                        message += '\0 \n' + ' ' + weather;
                     }
                     if (paramName === 'temperature' && i === (hoursfromnow * 3) - 3) {
                         const paramValue = elements[i].getElementsByTagName('BsWfs:ParameterValue')[0].textContent;
