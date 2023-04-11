@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
 const channelID = '1085880960882589718';
 const showcase = '1093786088482541679';
-const showcaseLogs = '1088015207210696714';
+const showcaseLogs = '1095228390212120626';
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
