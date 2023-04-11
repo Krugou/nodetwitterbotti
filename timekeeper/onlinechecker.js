@@ -6,6 +6,7 @@ import fetch from 'node-fetch';
 const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
 const channelID = '1085880960882589718';
 const showcase = '1093786088482541679';
+const showcaseLogs = '1088015207210696714';
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
@@ -55,6 +56,7 @@ const onlineChecker = () => {
                 // for loop to send all files
                 for (let i = 0; i < data.length; i++) {
                     jakbot.channels.cache.get(showcase).send(' \0 \n https://media.mw.metropolia.fi/wbma/uploads/' + data[i].filename + ' \n Description: ' + data[i].description + ' \n Title: ' + data[i].title + ' \n Time added: ' + data[i].time_added + ' \n Mime type: ' + data[i].mime_type + ' \n Media type: ' + data[i].media_type + ' \n User id: ' + data[i].user_id + ' \n File Size: ' + data[i].filesize + ' \n File id: ' + data[i].file_id + ' \n Filename: ' + data[i].filename + ' \n ');
+                    jakbot.channels.cache.get(showcaseLogs).send(' \0 \n https://media.mw.metropolia.fi/wbma/uploads/' + data[i].filename + ' \n Description: ' + data[i].description + ' \n Title: ' + data[i].title + ' \n Time added: ' + data[i].time_added + ' \n Mime type: ' + data[i].mime_type + ' \n Media type: ' + data[i].media_type + ' \n User id: ' + data[i].user_id + ' \n File Size: ' + data[i].filesize + ' \n File id: ' + data[i].file_id + ' \n Filename: ' + data[i].filename + ' \n ');
                 }
                 jakbot.channels.cache.get(channelID).send(' \0 \n https://media.mw.metropolia.fi/wbma/media/ is online \n ');
             })
