@@ -1,9 +1,9 @@
 import 'discord-reply';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
 import fetch from 'node-fetch';
 
-const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
+const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 const channelIDKaramalmi = '1087689568549097567';
 const channelIDKaramalmilogs = '1088015207210696714';
 
@@ -16,14 +16,14 @@ jakbot.once(Events.ClientReady, c => {
 
 jakbot.on('ready', jakbot => {
   const channel = jakbot.channels.cache.get(channelIDKaramalmi);
-  channel.messages.fetch({ limit: 100 })
+  channel.messages.fetch({limit: 100})
     .then(messages => {
       // Delete the messages
       channel.bulkDelete(messages);
     })
     .catch(console.error);
   jakbot.user.setUsername('LunchKeeper');
-  jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
+  jakbot.user.setActivity('Nodejs', {type: 'PLAYING'});
   // if today is monday
   const today = new Date();
   const day = today.getDay();
@@ -42,18 +42,29 @@ const checkMenu = (id, language, channelID) => {
         return response.json();
       })
       .then(data => {
-        jakbot.channels.cache.get(channelID).send(' \0 \n Nimi: ' + data.RestaurantName + '\n Päiväys: ' + data.MenusForDays[0].Date + '\n Lounasaika: ' + data.MenusForDays[0].LunchTime + '\n Linkki:' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
-        for (let j = 0; j < data.MenusForDays[0].SetMenus.length; j++) {
-          for (let i = 0; i < data.MenusForDays[0].SetMenus[j].Components.length; i++) {
-            jakbot.channels.cache.get(channelID).send(data.MenusForDays[0].SetMenus[j].Components[i]);
-          }
-          jakbot.channels.cache.get(channelID).send('\n Hinnat: ' + data.MenusForDays[0].SetMenus[j].Price+'€');
+        if (data.MenusForDays[0].SetMenus.length > 0) {
+          jakbot.channels.cache.get(channelID).send(' \0 \n Nimi: ' + data.RestaurantName + '\n Päiväys: ' + data.MenusForDays[0].Date + '\n Lounasaika: ' + data.MenusForDays[0].LunchTime + '\n Linkki:' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
+          for (let j = 0; j < data.MenusForDays[0].SetMenus.length; j++) {
+            for (let i = 0; i < data.MenusForDays[0].SetMenus[j].Components.length; i++) {
+              jakbot.channels.cache.get(channelID).send(data.MenusForDays[0].SetMenus[j].Components[i]);
+            }
+            jakbot.channels.cache.get(channelID).send('\n Hinnat: ' + data.MenusForDays[0].SetMenus[j].Price + '€');
 
-        }
-        jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
-      });
+          }
+          jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
+        } else {
+          jakbot.channels.cache.get(channelID).send(' \0 \n Nimi: ' + data.RestaurantName + '\n Päiväys: ' + data.MenusForDays[0].Date + '\n Lounasaika: ' + data.MenusForDays[0].LunchTime + '\n Linkki:' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
+          jakbot.channels.cache.get(channelID).send('Ei lounasta tänään');
+          
+
+        });
+  }
   });
 };
+
+
+
+
 
 
 

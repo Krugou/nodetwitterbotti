@@ -70,8 +70,18 @@ const onlineChecker = () => {
 };
 
 deleteMessages();
-
+// make onlinechecker function stop working during june, july and august
+const date = new Date();
+const month = date.getMonth();
+const day = date.getDate();
+if (month === 5 || month === 6 || month === 7) {
+    console.log('not running onlinechecker');
+} else if (month === 8 && day < 15) {
+    
 onlineChecker();
+
+
+
 
 
 
