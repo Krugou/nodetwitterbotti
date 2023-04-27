@@ -40,12 +40,15 @@ const onlineChecker = () => {
         jakbot.user.setUsername('Onlinechecker');
         jakbot.user.setActivity('Nodejs', {type: 'PLAYING'});
         // check if https://media.mw.metropolia.fi/wbma/media/ is online
-        fetch('https://media.mw.metropolia.fi/wbma/media/', {
+        fetch('https://media.mw.metropolia.fi/wbma/media?limit=200', {
             method: 'GET',
             headers: {
 
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+
+
+            },
+
         })
             .then(response => {
                 return response.json();
