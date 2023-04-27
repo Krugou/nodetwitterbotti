@@ -1,9 +1,9 @@
 import 'discord-reply';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
 import fetch from 'node-fetch';
 
-const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
+const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 const channelID = '1085880960882589718';
 const showcase = '1093786088482541679';
 const showcaseLogs = '1095228390212120626';
@@ -16,7 +16,7 @@ jakbot.once(Events.ClientReady, c => {
 const deleteMessages = () => {
     jakbot.on('ready', jakbot => {
         const channel = jakbot.channels.cache.get(channelID);
-        channel.messages.fetch({ limit: 25 })
+        channel.messages.fetch({limit: 25})
             .then(messages => {
                 // Delete the messages
                 channel.bulkDelete(messages);
@@ -24,7 +24,7 @@ const deleteMessages = () => {
             .catch(console.error);
 
         const channel2 = jakbot.channels.cache.get(showcase);
-        channel2.messages.fetch({ limit: 100 })
+        channel2.messages.fetch({limit: 100})
             .then(messages => {
                 // Delete the messages
                 channel2.bulkDelete(messages);
@@ -38,7 +38,7 @@ const deleteMessages = () => {
 const onlineChecker = () => {
     jakbot.on('ready', jakbot => {
         jakbot.user.setUsername('Onlinechecker');
-        jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
+        jakbot.user.setActivity('Nodejs', {type: 'PLAYING'});
         // check if https://media.mw.metropolia.fi/wbma/media/ is online
         fetch('https://media.mw.metropolia.fi/wbma/media/', {
             method: 'GET',
@@ -71,13 +71,7 @@ const onlineChecker = () => {
 
 deleteMessages();
 // make onlinechecker function stop working during june, july and august
-const date = new Date();
-const month = date.getMonth();
-const day = date.getDate();
-if (month === 5 || month === 6 || month === 7) {
-    console.log('not running onlinechecker');
-} else if (month === 8 && day < 15) {
-    
+
 onlineChecker();
 
 
