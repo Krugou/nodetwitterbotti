@@ -9,7 +9,7 @@ const app = express();
 app.use(cors()); // Add this line to include the cors middleware
 const yelpApiKey = 'SmnwB0JMGLWfiMP7jcpFY4NNRtxVztjNKMb2AjR9sZB2LnaPtr8-GQd6enDpL-Z2s4h0ml_GSQ0uACBH_L6Ii9rvNVfSkaKO5c2L9EKG6FzFGl7t20xG3Khl6ClJZHYx';
 
-
+const passphrase = 'asdasdasdasd';
 
 
 const yelpProxyOptions = {
@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 3000;
 // Read the private key and certificate
 const privateKey = fs.readFileSync('key.pem', 'utf8');
 const certificate = fs.readFileSync('cert.pem', 'utf8');
-const credentials = {key: privateKey, cert: certificate,'asdasdasdasd'};
+const credentials = {key: privateKey, cert: certificate, passphrase};
 
 // Create an HTTPS server with the credentials
 const httpsServer = https.createServer(credentials, app);
