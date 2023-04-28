@@ -35,12 +35,12 @@ const deleteMessages = () => {
     });
 };
 
-const onlineChecker = () => {
+const onlineChecker = (limit) => {
     jakbot.on('ready', jakbot => {
         jakbot.user.setUsername('Onlinechecker');
         jakbot.user.setActivity('Nodejs', {type: 'PLAYING'});
         // check if https://media.mw.metropolia.fi/wbma/media/ is online
-        fetch('https://media.mw.metropolia.fi/wbma/media?limit=200', {
+        fetch('https://media.mw.metropolia.fi/wbma/media?limit=' + limit, {
             method: 'GET',
             headers: {
 
@@ -77,7 +77,7 @@ const onlineChecker = () => {
 deleteMessages();
 // make onlinechecker function stop working during june, july and august
 
-onlineChecker();
+onlineChecker(300);
 
 
 
