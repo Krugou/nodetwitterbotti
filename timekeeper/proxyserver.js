@@ -15,10 +15,13 @@ const yelpProxyOptions = {
         proxyReq.setHeader('Authorization', `Bearer ${yelpApiKey}`);
     },
 };
-
+app.get('/', (req, res) => {
+    res.send('This works!');
+});
 app.use('/yelp', createProxyMiddleware(yelpProxyOptions));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
