@@ -3,7 +3,7 @@ const {createProxyMiddleware} = require('http-proxy-middleware');
 
 const app = express();
 
-const yelpApiKey = 'YOUR_YELP_API_KEY';
+const yelpApiKey = 'SmnwB0JMGLWfiMP7jcpFY4NNRtxVztjNKMb2AjR9sZB2LnaPtr8-GQd6enDpL-Z2s4h0ml_GSQ0uACBH_L6Ii9rvNVfSkaKO5c2L9EKG6FzFGl7t20xG3Khl6ClJZHYx';
 
 const yelpProxyOptions = {
     target: 'https://api.yelp.com',
