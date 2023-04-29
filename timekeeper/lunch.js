@@ -36,7 +36,7 @@ jakbot.on('ready', jakbot => {
 
 
 const checkMenu = (id, language, channelID) => {
-  jakbot.on('ready', jakbot => {
+  jakbot.on('ready', () => {
     fetch('https://www.compass-group.fi/menuapi/feed/json?costNumber=' + id + '&language=' + language)
       .then(response => {
         return response.json();
@@ -49,18 +49,16 @@ const checkMenu = (id, language, channelID) => {
               jakbot.channels.cache.get(channelID).send(data.MenusForDays[0].SetMenus[j].Components[i]);
             }
             jakbot.channels.cache.get(channelID).send('\n Hinnat: ' + data.MenusForDays[0].SetMenus[j].Price + '€');
-
           }
           jakbot.channels.cache.get(channelID).send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
         } else {
           jakbot.channels.cache.get(channelID).send(' \0 \n Nimi: ' + data.RestaurantName + '\n Päiväys: ' + data.MenusForDays[0].Date + '\n Lounasaika: ' + data.MenusForDays[0].LunchTime + '\n Linkki:' + data.RestaurantUrl + '\n ' + data.Footer + '\n ');
           jakbot.channels.cache.get(channelID).send('Ei lounasta tänään');
-          
-
-        });
-  }
+        }
+      });
   });
 };
+
 
 
 
