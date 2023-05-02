@@ -1,10 +1,9 @@
-import {Client, Intents} from 'discord.js';
+import {Client, Events, GatewayIntentBits} from 'discord.js';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 
 dotenv.config();
-
-const jakbot = new Client({intents: [Intents.FLAGS.Guilds, Intents.FLAGS.GuildMessages]});
+const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 const channelIDKaramalmi = '1087689568549097567';
 const channelIDKaramalmilogs = '1088015207210696714';
 
@@ -32,25 +31,27 @@ jakbot.on('ready', () => {
 });
 
 const checkMenu = (id, language, channelID) => {
-  fetch(`https://www.compass-group.fi/menuapi/feed/json?costNumber=${id}&language=${language}`)
-    .then(response => response.json())
-    .then(data => {
-      const channel = jakbot.channels.cache.get(channelID);
-      if (data.MenusForDays[0].SetMenus.length > 0) {
-        channel.send(`\0 \n Nimi: ${data.RestaurantName}\n Päiväys: ${data.MenusForDays[0].Date}\n Lounasaika: ${data.MenusForDays[0].LunchTime}\n Linkki: ${data.RestaurantUrl}\n ${data.Footer}\n`);
-        data.MenusForDays[0].SetMenus.forEach(setMenu => {
-          setMenu.Components.forEach(component => {
-            channel.send(component);
+  jakbot.on('ready', () => {
+    fetch(`https://www.compass-group.fi/menuapi/feed/json?costNumber=${id}&language=${language}`)
+      .then(response => response.json())
+      .then(data => {
+        const channel = jakbot.channels.cache.get(channelID);
+        if (data.MenusForDays[0].SetMenus.length > 0) {
+          channel.send(`\0 \n Nimi: ${data.RestaurantName}\n Päiväys: ${data.MenusForDays[0].Date}\n Lounasaika: ${data.MenusForDays[0].LunchTime}\n Linkki: ${data.RestaurantUrl}\n ${data.Footer}\n`);
+          data.MenusForDays[0].SetMenus.forEach(setMenu => {
+            setMenu.Components.forEach(component => {
+              channel.send(component);
+            });
+            channel.send(`\n Hinnat: ${setMenu.Price}€`);
           });
-          channel.send(`\n Hinnat: ${setMenu.Price}€`);
-        });
-        channel.send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
-      } else {
-        channel.send(`\0 \n Nimi: ${data.RestaurantName}\n Päiväys: ${data.MenusForDays[0].Date}\n Lounasaika: ${data.MenusForDays[0].LunchTime}\n Linkki: ${data.RestaurantUrl}\n ${data.Footer}\n`);
-        channel.send('Ei lounasta tänään');
-      }
-    })
-    .catch(console.error);
+          channel.send('(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja');
+        } else {
+          channel.send(`\0 \n Nimi: ${data.RestaurantName}\n Päiväys: ${data.MenusForDays[0].Date}\n Lounasaika: ${data.MenusForDays[0].LunchTime}\n Linkki: ${data.RestaurantUrl}\n ${data.Footer}\n`);
+          channel.send('Ei lounasta tänään');
+        }
+      })
+      .catch(console.error);
+  });
 };
 
 checkMenu(3208, 'fi', channelIDKaramalmi);
