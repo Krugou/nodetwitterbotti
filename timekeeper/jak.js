@@ -120,7 +120,7 @@ const checkReservations = (channelID, nameofgroup) => {
 
 
         if (data.reservations.length === 0) {
-          jakbot.channels.cache.get(channelID).send("\0 \n Looks like a black hole just appeared and swallowed all the reservations in the future.Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
+          jakbot.channels.cache.get(channelID).send("\0 \n Looks like a black hole just appeared and swallowed all the reservations in the future. Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
 
         }
       })

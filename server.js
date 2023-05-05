@@ -1,8 +1,8 @@
-import "dotenv/config";
-import { TwitterApi } from "twitter-api-v2";
-import fetch from "node-fetch";
+import 'dotenv/config';
+import fetch from 'node-fetch';
+import {TwitterApi} from 'twitter-api-v2';
 
-let data = "https://krugou.github.io/nonprojectfiles/beaches.json";
+const data = 'https://krugou.github.io/nonprojectfiles/beaches.json';
 const userClient = new TwitterApi({
   appKey: process.env.TWITTER_API_KEY,
   appSecret: process.env.TWITTER_API_SECRET,
@@ -10,155 +10,67 @@ const userClient = new TwitterApi({
   accessSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 });
 
-const tweet = async () => {
+const fetchData = async () => {
   const response = await fetch(data);
   const fetchDataJson = await response.json();
   let temperatureData = [];
-  let placeNameData = [];
-  let airTemperatureData = [];
-  let timeTakenData = [];
   let currentDate = new Date();
-  for (let i = 0; i < fetchDataJson.beaches.length; i++) {
-    const response = await fetch(
-      "https://iot.fvh.fi/opendata/uiras/" +
-      fetchDataJson.beaches[i].url +
-      ".json"
-    );
-    const fetchDataJson2 = await response.json();
-    const dataIndexNumber = fetchDataJson2.data.length - 1;
-    const dateDataJson = new Date(fetchDataJson2.data[dataIndexNumber].time);
 
-    if (
-      dateDataJson.getTime() > currentDate.getTime() - 7200000 &&
-      dateDataJson.getTime() < currentDate.getTime()
-    ) {
-      let paikannimi = fetchDataJson2.meta.name;
-      let aikajsondata = fetchDataJson2.data[dataIndexNumber].time;
-      let waterTemperaturedata =
-        fetchDataJson2.data[dataIndexNumber].temp_water;
-      let airTemperaturedata = fetchDataJson2.data[dataIndexNumber].temp_air;
-      temperatureData.push(waterTemperaturedata);
-      placeNameData.push(paikannimi);
-      airTemperatureData.push(airTemperaturedata);
-      timeTakenData.push(aikajsondata);
-    } else {
-      continue;
+  for (const beach of fetchDataJson.beaches) {
+    const response = await fetch(`https://iot.fvh.fi/opendata/uiras/${beach.url}.json`);
+    const fetchDataJson2 = await response.json();
+    const latestData = fetchDataJson2.data[fetchDataJson2.data.length - 1];
+    const dataDate = new Date(latestData.time);
+
+    if (dataDate.getTime() > currentDate.getTime() - 7200000 && dataDate.getTime() < currentDate.getTime()) {
+      temperatureData.push({
+        placeName: fetchDataJson2.meta.name,
+        time: latestData.time,
+        waterTemperature: latestData.temp_water,
+        airTemperature: latestData.temp_air,
+      });
     }
   }
-  let biggest = temperatureData[0];
-  let nextbiggest = temperatureData[0];
-  for (let i = 0; i < temperatureData.length; i++) {
-    if (temperatureData[i] > biggest) {
-      nextbiggest = biggest;
-      biggest = temperatureData[i];
-    } else if (
-      temperatureData[i] > nextbiggest &&
-      temperatureData[i] != biggest
-    )
-      nextbiggest = temperatureData[i];
-  }
-  const max = Math.max(...temperatureData);
-  const index = temperatureData.indexOf(max);
-  const index2 = temperatureData.indexOf(nextbiggest);
-  let placeName2 = placeNameData[index2];
-  let waterTemperature2 = temperatureData[index2];
-  let airTemperature2 = airTemperatureData[index2];
-  let timeTaken2 = new Date(timeTakenData[index2]);
-  let tweetinglist2 =
-    "Kello: " +
-    timeTaken2.toLocaleTimeString("fi-FI") +
-    " Toiseksi korkein uimaveden lämpötila on paikassa: #" +
-    placeName2 +
-    " asteita on " +
-    waterTemperature2 +
-    " \xB0C  ja " +
-    "Ilman lämpötila on " +
-    airTemperature2 +
-    " \xB0C #pääkaupunkiseutu";
 
+  return temperatureData;
+};
+
+const tweetInfo = (placeName, waterTemperature, airTemperature, time) => {
+  const timeTaken = new Date(time);
+  return `Kello: ${timeTaken.toLocaleTimeString('fi-FI')} Uimaveden lämpötila on paikassa: #${placeName} asteita on ${waterTemperature} \xB0C  ja Ilman lämpötila on ${airTemperature} \xB0C #pääkaupunkiseutu`;
+};
+
+const tweetTemperature = async (tweetText) => {
   try {
-    userClient.v2.tweet(tweetinglist2);
+    await userClient.v2.tweet(tweetText);
   } catch (e) {
     console.error(e);
   }
 };
-const tweet2 = async () => {
-  const response = await fetch(data);
-  const fetchDataJson = await response.json();
-  let temperatureData = [];
-  let placeNameData = [];
-  let airTemperatureData = [];
-  let timeTakenData = [];
-  let currentDate = new Date();
-  for (let i = 0; i < fetchDataJson.beaches.length; i++) {
-    const response = await fetch(
-      "https://iot.fvh.fi/opendata/uiras/" +
-      fetchDataJson.beaches[i].url +
-      ".json"
-    );
-    const fetchDataJson2 = await response.json();
-    const dataIndexNumber = fetchDataJson2.data.length - 1;
-    const dateDataJson = new Date(fetchDataJson2.data[dataIndexNumber].time);
-    if (
-      dateDataJson.getTime() > currentDate.getTime() - 7200000 &&
-      dateDataJson.getTime() < currentDate.getTime()
-    ) {
-      let paikannimi = fetchDataJson2.meta.name;
-      let aikajsondata = fetchDataJson2.data[dataIndexNumber].time;
-      let waterTemperaturedata =
-        fetchDataJson2.data[dataIndexNumber].temp_water;
-      let airTemperaturedata = fetchDataJson2.data[dataIndexNumber].temp_air;
 
-      temperatureData.push(waterTemperaturedata);
-      placeNameData.push(paikannimi);
-      airTemperatureData.push(airTemperaturedata);
-      timeTakenData.push(aikajsondata);
+const main = async () => {
+  const temperatureData = await fetchData();
+  temperatureData.sort((a, b) => b.waterTemperature - a.waterTemperature);
 
+  const highestTemperature = temperatureData[0];
+  const secondHighestTemperature = temperatureData[1];
 
-    } else {
-      continue;
-    }
-  }
-  let biggest = temperatureData[0];
-  let nextbiggest = temperatureData[0];
-  for (let i = 0; i < temperatureData.length; i++) {
-    if (temperatureData[i] > biggest) {
-      nextbiggest = biggest;
-      biggest = temperatureData[i];
-    } else if (
-      temperatureData[i] > nextbiggest &&
-      temperatureData[i] != biggest
-    )
-      nextbiggest = temperatureData[i];
-  }
+  const highestTweetText = tweetInfo(
+    highestTemperature.placeName,
+    highestTemperature.waterTemperature,
+    highestTemperature.airTemperature,
+    highestTemperature.time
+  );
 
-  const max = Math.max(...temperatureData);
-  const index = temperatureData.indexOf(max);
-  const index2 = temperatureData.indexOf(nextbiggest);
+  const secondHighestTweetText = tweetInfo(
+    secondHighestTemperature.placeName,
+    secondHighestTemperature.waterTemperature,
+    secondHighestTemperature.airTemperature,
+    secondHighestTemperature.time
+  );
 
-  let placeName = placeNameData[index];
-  let waterTemperature = temperatureData[index];
-  let airTemperature = airTemperatureData[index];
-  let timeTaken = new Date(timeTakenData[index]);
-
-
-  let tweetinglist =
-    "Kello: " +
-    timeTaken.toLocaleTimeString("fi-FI") +
-    " Korkein uimaveden lämpötila on paikassa: #" +
-    placeName +
-    " asteita on " +
-    waterTemperature +
-    " \xB0C  ja " +
-    "Ilman lämpötila on " +
-    airTemperature +
-    " \xB0C #pääkaupunkiseutu";
-
-  try {
-    userClient.v2.tweet(tweetinglist);
-  } catch (e) {
-    console.error(e);
-  }
+  await tweetTemperature(highestTweetText);
+  await tweetTemperature(secondHighestTweetText);
 };
-setInterval(tweet, 2100000);
-setInterval(tweet2, 2700000);
+
+setInterval(main, 2100000);
