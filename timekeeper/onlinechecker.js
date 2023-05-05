@@ -77,7 +77,7 @@ const onlineChecker = (limit) => {
 deleteMessages();
 // make onlinechecker function stop working during june, july and august
 
-onlineChecker(300);
+onlineChecker(9999);
 
 
 
