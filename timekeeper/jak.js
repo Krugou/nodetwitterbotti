@@ -81,7 +81,7 @@ const checkReservations = (channelID, nameofgroup) => {
       .then(data => {
 
         const today = new Date();
-        jakbot.channels.cache.get(channelID).send('\0 \n Date Today: ' + today.toISOString().substring(0, 10 + 'Target Group: '+ nameofgroup));
+        jakbot.channels.cache.get(channelID).send('\0 \n Date Today: ' + today.toISOString().substring(0, 10) + 'Target Group: ' + nameofgroup);
         // get date from last reservation
         const lastReservation = data.reservations[data.reservations.length - 1];
         const lastReservationDate = new Date(lastReservation.startDate);
