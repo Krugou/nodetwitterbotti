@@ -1,11 +1,12 @@
 import 'discord-reply';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
 import fetch from 'node-fetch';
 
-const jakbot = new Client({ intents: [GatewayIntentBits.Guilds] });
+const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 const channelID = '1084944685568638976';
 const logs = '1087029247501152297';
+const pokemon = '1104292989448245288';
 
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.once(Events.ClientReady, c => {
@@ -16,14 +17,14 @@ jakbot.once(Events.ClientReady, c => {
 
 jakbot.on('ready', jakbot => {
   const channel = jakbot.channels.cache.get(channelID);
-  channel.messages.fetch({ limit: 100 })
+  channel.messages.fetch({limit: 100})
     .then(messages => {
       // Delete the messages
       channel.bulkDelete(messages);
     })
     .catch(console.error);
-  jakbot.user.setUsername('TimeKeeper');
-  jakbot.user.setActivity('Nodejs', { type: 'PLAYING' });
+  // jakbot.user.setUsername('TimeKeeper');
+  // jakbot.user.setActivity('Nodejs', {type: 'PLAYING'});
   // if today is monday
   const today = new Date();
   const day = today.getDay();
@@ -32,6 +33,33 @@ jakbot.on('ready', jakbot => {
       send(" \0 \n Hello, I am the TimeKeeper! I'm your trusty sidekick in the battle against tardiness.My circuits are synced to the atomic clock, so I always know what time it is.And don't worry about keeping track of your class schedule, I've got it covered! I'll beep-boop you a friendly reminder when it's time to stop slacking off and start learning. Now, let's make this week as productive as a robot on a caffeine high! Bzzt!");
   }
 });
+const getRandomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+const apiBaseUrl = "https://pokeapi.co/api/v2/";
+
+const getRandomPokemon = async (pokemon) => {
+
+  try {
+    const response = await fetch(`${apiBaseUrl}pokemon/`);
+    const data = await response.json();
+    const totalPokemonCount = data.count;
+    const randomPokemonId = getRandomInt(1, totalPokemonCount);
+    const pokemonResponse = await fetch(`${apiBaseUrl}pokemon/${randomPokemonId}`);
+    const pokemonData = await pokemonResponse.json();
+    pokemonData.name = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
+    jakbot.on('ready', jakbot => {
+
+      jakbot.channels.cache.get(pokemon).
+        send(` \0 \n id: ${randomPokemonId}/${totalPokemonCount} \n ${pokemonData.name} \n ${pokemonData.sprites.other['official-artwork'].front_default}`);
+    });
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+  }
+
+};
+
+
 
 const checkReservations = (channelID, nameofgroup) => {
   jakbot.on('ready', jakbot => {
@@ -105,25 +133,39 @@ const checkReservations = (channelID, nameofgroup) => {
             jakbot.channels.cache.get(channelID).send('\0 \n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
 
 
-            // if (room) {
-            //   const roomName = room.code;
-            //   jakbot.channels.cache.get(channelID).send(` -- \n Room: ${roomName}`);
-            // } else {
-            //   jakbot.channels.cache.get(channelID).send('-- \n Remote teaching.');
-            // }
 
+          }
+          const monthFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+          const isFarInFuture = date > monthFromNow;
 
+          if (isFarInFuture) {
+            // Do something when a reservation is more than 30 days from now
+            const endDate = data.reservations[i].endDate;
+            const endTime = endDate.substring(11, 16);
+            const time = dateStr.substring(11, 16);
+            const date = dateStr.substring(0, 10);
+            const startDateTime = new Date(dateStr);
+            const endDateTime = new Date(endDate);
+            const hoursDiff = (endDateTime - startDateTime) / 3600000;
+            const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
+            const currentSubjectIndex = i; // Get the index of the current subject in the response
+            const resources = data.reservations[i].resources;
+            const room = resources.find(resource => resource.type === 'room');
+            jakbot.channels.cache.get(channelID).send('\0 \n Next reservation is far in the future:\n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
           }
 
         }
-        jakbot.channels.cache.get(channelID).send(`\0 \n Total curriculum hours left: ${totalHoursLeft} \n Total actual days left:  ${daysUntilLastReservationRounded}`); // log or send a message with the total hours left
+        if (totalHoursLeft > 0) {
+          jakbot.channels.cache.get(channelID).send(`\0 \n Hours left in curriculum for ${nameofgroup}:  ${totalHoursLeft}  \n  Remaining days until last reservation for ${nameofgroup}:  ${daysUntilLastReservationRounded} `);
+        }
 
-
-        if (data.reservations.length === 0) {
+        if (totalHoursLeft === 0) {
           jakbot.channels.cache.get(channelID).send("\0 \n Looks like a black hole just appeared and swallowed all the reservations in the future. Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
+          getRandomPokemon(pokemon);
 
         }
       })
+
       .catch(err => {
         console.log(err);
       });
