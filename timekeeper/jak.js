@@ -152,17 +152,17 @@ const checkReservations = (channelID, nameofgroup) => {
             const resources = data.reservations[i].resources;
             const room = resources.find(resource => resource.type === 'room');
             jakbot.channels.cache.get(channelID).send('\0 \n Next reservation is far in the future:\n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
-break;
+            break;
           }
 
+        } if (isBetweenTodayAndFiveDaysFromNow) {
+          if (totalHoursLeft > 0) {
+            jakbot.channels.cache.get(channelID).send(`\0 \n Hours left in curriculum for ${nameofgroup}:  ${totalHoursLeft}  \n  Remaining days until last reservation for ${nameofgroup}:  ${daysUntilLastReservationRounded} `);
+          }
         }
-        if (totalHoursLeft > 0) {
-          jakbot.channels.cache.get(channelID).send(`\0 \n Hours left in curriculum for ${nameofgroup}:  ${totalHoursLeft}  \n  Remaining days until last reservation for ${nameofgroup}:  ${daysUntilLastReservationRounded} `);
-        }
-
         if (totalHoursLeft === 0) {
           jakbot.channels.cache.get(channelID).send("\0 \n Looks like a black hole just appeared and swallowed all the reservations in the future. Guess it's time to break out the popcorn and watch time unravel from the comfort of your couch!");
-          getRandomPokemon(pokemon);
+
 
         }
       })
@@ -174,7 +174,7 @@ break;
 
   });
 };
-
+getRandomPokemon(pokemon);
 
 checkReservations(channelID, "tvt21-m");
 checkReservations(logs, "tvt21-m");
