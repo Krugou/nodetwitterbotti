@@ -149,7 +149,7 @@ const checkReservations = (channelID, nameofgroup) => {
             const hoursDiff = (endDateTime - startDateTime) / 3600000;
             const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
             const currentSubjectIndex = i; // Get the index of the current subject in the response
-            const resources = data.reservations[i].resources;
+            const resources = data.reservations[0].resources;
             const room = resources.find(resource => resource.type === 'room');
             jakbot.channels.cache.get(channelID).send('\0 \n Next reservation is far in the future:\n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
           }
