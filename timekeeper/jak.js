@@ -135,25 +135,25 @@ const checkReservations = (channelID, nameofgroup) => {
 
 
           }
-          const monthFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-          const isFarInFuture = date > monthFromNow;
+          // const monthFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+          // const isFarInFuture = date > monthFromNow;
 
-          if (isFarInFuture) {
-            // Do something when a reservation is more than 30 days from now
-            const endDate = data.reservations[i].endDate;
-            const endTime = endDate.substring(11, 16);
-            const time = dateStr.substring(11, 16);
-            const date = dateStr.substring(0, 10);
-            const startDateTime = new Date(dateStr);
-            const endDateTime = new Date(endDate);
-            const hoursDiff = (endDateTime - startDateTime) / 3600000;
-            const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
-            const currentSubjectIndex = i; // Get the index of the current subject in the response
-            const resources = data.reservations[i].resources;
-            const room = resources.find(resource => resource.type === 'room');
-            jakbot.channels.cache.get(channelID).send('\0 \n Next reservation is far in the future:\n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
-            break;
-          }
+          // if (isFarInFuture) {
+          //   // Do something when a reservation is more than 30 days from now
+          //   const endDate = data.reservations[i].endDate;
+          //   const endTime = endDate.substring(11, 16);
+          //   const time = dateStr.substring(11, 16);
+          //   const date = dateStr.substring(0, 10);
+          //   const startDateTime = new Date(dateStr);
+          //   const endDateTime = new Date(endDate);
+          //   const hoursDiff = (endDateTime - startDateTime) / 3600000;
+          //   const subjectsCount = data.reservations.length; // Get the total count of subjects in the response
+          //   const currentSubjectIndex = i; // Get the index of the current subject in the response
+          //   const resources = data.reservations[i].resources;
+          //   const room = resources.find(resource => resource.type === 'room');
+          //   jakbot.channels.cache.get(channelID).send('\0 \n Next reservation is far in the future:\n Id: ' + data.reservations[i].id + '\n Date: ' + date + '\n Subject: ' + data.reservations[i].subject + '\n Start Time: ' + time + '\n End Time: ' + endTime + '\n ' + `Count: ${currentSubjectIndex}/${subjectsCount}.` + '\n Left:  ' + (subjectsCount - currentSubjectIndex - 1) + '\n Duration: ' + hoursDiff.toFixed(2) + ' hours' + (room ? ` \n Room: ${room.code} // ${room.name}` : '\n Remote teaching.'));
+          //   break;
+          // }
 
         } if (isBetweenTodayAndFiveDaysFromNow) {
           if (totalHoursLeft > 0) {
