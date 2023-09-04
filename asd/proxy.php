@@ -8,10 +8,8 @@ $yelpApiKey = 'SmnwB0JMGLWfiMP7jcpFY4NNRtxVztjNKMb2AjR9sZB2LnaPtr8-GQd6enDpL-Z2s
 $yelpApiUrl = 'https://api.yelp.com';
 
 if (isset($_SERVER['REQUEST_URI'])) {
-    $path = str_replace('/yelp', '', $_SERVER['REQUEST_URI']);
-
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $yelpApiUrl . $path);
+    curl_setopt($ch, CURLOPT_URL, $yelpApiUrl . $_SERVER['REQUEST_URI']);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Authorization: Bearer ' . $yelpApiKey,
