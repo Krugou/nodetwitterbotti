@@ -19,7 +19,7 @@ jakbot.on('ready', () => {
         const hours = now.getHours();
 
         // Check if it is nighttime (between 10pm and 6am)
-        if (hours >= 20 || hours < 7) {
+        if (hours >= 17 || hours < 4) {
             // Send the image to the channel.
             channel.send({files: [url]});
         } else {
