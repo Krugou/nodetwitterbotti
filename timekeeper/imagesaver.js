@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 const PREFIX = '!'; // You can change this to your desired command prefix.
 const url = 'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
-const channelID = '1020376168496627742';
+const channelID = '1020376168496627742'; 
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.on('ready', () => {
