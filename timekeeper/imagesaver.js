@@ -24,12 +24,12 @@ jakbot.on('ready', () => {
 		const urlsunrisesunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&date=${now
 			.toISOString()
 			.slice(0, 10)}`;
-		console.log(urlsunrisesunset + ' ' + now.toISOString().slice(0, 10));
+		console.log('sunrisesunset url' + urlsunrisesunset);
 		// Fetch the data
 		const response = await fetch(urlsunrisesunset);
 
 		// Log the response
-		console.log(response);
+		// console.log(response);
 		const data = await response.json();
 		const {sunrise, sunset} = data.results;
 
