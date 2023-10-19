@@ -40,10 +40,14 @@ jakbot.on('ready', () => {
 		const sunriseDate = convertTimeTo24HourFormat(sunrise);
 		const sunsetDate = convertTimeTo24HourFormat(sunset);
 
-		// Get the current date and time
-
+		const utcHours = now.getUTCHours();
+		console.log(utcHours); // Output: current UTC hour
+		const sunriseHours = sunriseDate.getUTCHours();
+		console.log(sunriseHours); // Output: sunrise UTC hour
+		const sunsetHours = sunsetDate.getUTCHours();
+		console.log(sunsetHours); // Output: sunset UTC hour
 		// Check if it is currently during sunrise or sunset
-		if (now >= sunriseDate && now <= sunsetDate) {
+		if (utcHours >= sunriseHours && utcHours <= sunsetHours) {
 			// Send the image to the channel.
 			const textChannel = channel;
 			textChannel.send({files: [url]});
