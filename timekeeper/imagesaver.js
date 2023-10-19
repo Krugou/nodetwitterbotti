@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 const PREFIX = '!'; // You can change this to your desired command prefix.
 const url = 'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
-const channelID = '1020376168496627742'; 
+const channelID = '1020376168496627742';
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.on('ready', () => {
@@ -34,23 +34,22 @@ jakbot.on('ready', () => {
 		const {sunrise, sunset} = data.results;
 
 		// Convert sunrise and sunset times to Date objects
-		const sunriseDate = new Date(
-			`${now.toISOString().slice(0, 10)}T${sunrise}`
-		);
+		const sunriseDate = new Date(`${now.toString().slice(0, 10)}T${sunrise}`);
 		console.log(
 			'🚀 ~ file: imagesaver.js:40 ~ postImageEvery30Minutes ~ sunriseDate:',
 			sunriseDate
 		);
-		const sunsetDate = new Date(`${now.toISOString().slice(0, 10)}T${sunset}`);
+		const sunsetDate = new Date(`${now.toString().slice(0, 10)}T${sunset}`);
 
 		console.log(
 			'🚀 ~ file: imagesaver.js:42 ~ postImageEvery30Minutes ~ sunsetDate:',
 			sunsetDate
 		);
 		// Check if it is currently during sunrise or sunset
-		if (now >= sunriseDate && now <= sunsetDate) {
+		if (new Date(now) >= sunriseDate && new Date(now) <= sunsetDate) {
 			// Send the image to the channel.
-			channel.send({files: [url]});
+			const textChannel = channel;
+			textChannel.send({files: [url]});
 		} else {
 			console.log("It's not sunrise or sunset, skipping image post.");
 		}
