@@ -20,9 +20,7 @@ jakbot.on('ready', () => {
 		const longitude = 24.39386623193809; // Define longitude
 
 		// Construct the URL
-		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&date=${now
-			.toString()
-			.slice(0, 10)}`;
+		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}}`;
 
 		// Fetch the data
 		const response = await fetch(urlSunriseSunset);
@@ -32,6 +30,8 @@ jakbot.on('ready', () => {
 		console.log(data);
 
 		const {sunrise, sunset} = data.results;
+		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunset:', sunset);
+		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunrise:', sunrise);
 
 		// Convert sunrise and sunset times to Date objects
 		const sunriseDate = new Date(`${now.toString().slice(0, 10)}T${sunrise}`);
