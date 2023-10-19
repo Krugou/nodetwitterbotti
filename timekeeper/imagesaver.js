@@ -13,9 +13,8 @@ jakbot.on('ready', () => {
 		console.log(`Posting image to channel ${channelID}...`);
 		const channel = jakbot.channels.cache.get(channelID); // Replace with your channel ID
 		if (!channel) return console.error('The channel does not exist!');
-
+		const now = new Date();
 		// Get the current date and time in UTC
-		const now = new Date().toISOString();
 		const latitude = 60.218393049680394; // Define latitude
 		const longitude = 24.39386623193809; // Define longitude
 
