@@ -21,7 +21,7 @@ jakbot.on('ready', () => {
 
 		// Construct the URL
 		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&date=${now
-			.toISOString()
+			.toString()
 			.slice(0, 10)}`;
 
 		// Fetch the data
