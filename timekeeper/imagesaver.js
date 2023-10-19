@@ -19,23 +19,25 @@ jakbot.on('ready', () => {
 		const latitude = 60.218393049680394; // Define latitude
 		const longitude = 24.39386623193809; // Define longitude
 
-		// Get the sunrise and sunset times for the specified location
 		// Construct the URL
-		const urlsunrisesunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}}`;
-		console.log('sunrisesunset url' + urlsunrisesunset);
+		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&date=${now
+			.toISOString()
+			.slice(0, 10)}`;
+
 		// Fetch the data
-		const response = await fetch(urlsunrisesunset);
+		const response = await fetch(urlSunriseSunset);
+		const data = await response.json();
 
 		// Log the response
-		// console.log(response);
-		const data = await response.json();
+		console.log(data);
+
 		const {sunrise, sunset} = data.results;
 
 		// Convert sunrise and sunset times to Date objects
 		const sunriseDate = new Date(
-			`${now.toISOString().slice(0, 10)}T${sunrise}Z`
+			`${now.toISOString().slice(0, 10)}T${sunrise}`
 		);
-		const sunsetDate = new Date(`${now.toISOString().slice(0, 10)}T${sunset}Z`);
+		const sunsetDate = new Date(`${now.toISOString().slice(0, 10)}T${sunset}`);
 
 		// Check if it is currently during sunrise or sunset
 		if (now >= sunriseDate && now <= sunsetDate) {
