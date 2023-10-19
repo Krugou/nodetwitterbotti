@@ -37,8 +37,16 @@ jakbot.on('ready', () => {
 		const sunriseDate = new Date(
 			`${now.toISOString().slice(0, 10)}T${sunrise}`
 		);
+		console.log(
+			'🚀 ~ file: imagesaver.js:40 ~ postImageEvery30Minutes ~ sunriseDate:',
+			sunriseDate
+		);
 		const sunsetDate = new Date(`${now.toISOString().slice(0, 10)}T${sunset}`);
 
+		console.log(
+			'🚀 ~ file: imagesaver.js:42 ~ postImageEvery30Minutes ~ sunsetDate:',
+			sunsetDate
+		);
 		// Check if it is currently during sunrise or sunset
 		if (now >= sunriseDate && now <= sunsetDate) {
 			// Send the image to the channel.
