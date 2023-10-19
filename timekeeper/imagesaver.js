@@ -32,21 +32,16 @@ jakbot.on('ready', () => {
 		const {sunrise, sunset} = data.results;
 		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunset:', sunset);
 		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunrise:', sunrise);
+		const sunriseDate = new Date(`1970-01-01T${sunrise}Z`);
+		const sunrise24h = sunriseDate.getUTCHours();
+		const sunsetDate = new Date(`1970-01-01T${sunset}Z`);
+		const sunset24h = sunsetDate.getUTCHours();
 
-		// Convert sunrise and sunset times to Date objects
-		const sunriseDate = new Date(`${now.toString().slice(0, 10)}T${sunrise}`);
-		console.log(
-			'🚀 ~ file: imagesaver.js:40 ~ postImageEvery30Minutes ~ sunriseDate:',
-			sunriseDate
-		);
-		const sunsetDate = new Date(`${now.toString().slice(0, 10)}T${sunset}`);
+		// Get the current hour
+		const currentHour = new Date().getUTCHours();
 
-		console.log(
-			'🚀 ~ file: imagesaver.js:42 ~ postImageEvery30Minutes ~ sunsetDate:',
-			sunsetDate
-		);
 		// Check if it is currently during sunrise or sunset
-		if (new Date(now) >= sunriseDate && new Date(now) <= sunsetDate) {
+		if (currentHour >= sunrise24h && currentHour <= sunset24h) {
 			// Send the image to the channel.
 			const textChannel = channel;
 			textChannel.send({files: [url]});
