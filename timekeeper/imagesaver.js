@@ -30,35 +30,20 @@ jakbot.on('ready', () => {
 		console.log(data);
 
 		const {sunrise, sunset} = data.results;
-		const time = sunrise || sunset;
-		const [hours, minutes, seconds] = time.split(/[:\s]/);
-		const date = new Date();
-		date.setUTCHours(hours > 12 ? hours - 12 : hours, minutes, seconds);
-		console.log('🚀 ~ file: imagesaver.js:37 ~ jakbot.on ~ date:', date);
-		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunset:', sunset);
-		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunrise:', sunrise);
-		const sunriseDate = new Date(`1970-01-01T${sunrise}Z`);
-		const sunrise24h = sunriseDate.getUTCHours();
-		console.log(
-			'🚀 ~ file: imagesaver.js:37 ~ jakbot.on ~ sunrise24h:',
-			sunrise24h
-		);
-		const sunsetDate = new Date(`1970-01-01T${sunset}Z`);
-		const sunset24h = sunsetDate.getUTCHours();
-		console.log(
-			'🚀 ~ file: imagesaver.js:40 ~ jakbot.on ~ sunset24h:',
-			sunset24h
-		);
+		const convertTimeTo24HourFormat = (time) => {
+			const [hours, minutes, seconds] = time.split(/[:\s]/);
+			const date = new Date();
+			date.setUTCHours(hours > 12 ? hours - 12 : hours, minutes, seconds);
+			return date;
+		};
 
-		// Get the current hour
-		const currentHour = new Date().getUTCHours();
-		console.log(
-			'🚀 ~ file: imagesaver.js:50 ~ jakbot.on ~ currentHour:',
-			currentHour
-		);
+		const sunriseDate = convertTimeTo24HourFormat(sunrise);
+		const sunsetDate = convertTimeTo24HourFormat(sunset);
+
+		// Get the current date and time
 
 		// Check if it is currently during sunrise or sunset
-		if (currentHour >= sunrise24h && currentHour <= sunset24h) {
+		if (now >= sunriseDate && now <= sunsetDate) {
 			// Send the image to the channel.
 			const textChannel = channel;
 			textChannel.send({files: [url]});
