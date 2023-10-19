@@ -34,11 +34,23 @@ jakbot.on('ready', () => {
 		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunrise:', sunrise);
 		const sunriseDate = new Date(`1970-01-01T${sunrise}Z`);
 		const sunrise24h = sunriseDate.getUTCHours();
+		console.log(
+			'🚀 ~ file: imagesaver.js:37 ~ jakbot.on ~ sunrise24h:',
+			sunrise24h
+		);
 		const sunsetDate = new Date(`1970-01-01T${sunset}Z`);
 		const sunset24h = sunsetDate.getUTCHours();
+		console.log(
+			'🚀 ~ file: imagesaver.js:40 ~ jakbot.on ~ sunset24h:',
+			sunset24h
+		);
 
 		// Get the current hour
 		const currentHour = new Date().getUTCHours();
+		console.log(
+			'🚀 ~ file: imagesaver.js:50 ~ jakbot.on ~ currentHour:',
+			currentHour
+		);
 
 		// Check if it is currently during sunrise or sunset
 		if (currentHour >= sunrise24h && currentHour <= sunset24h) {
