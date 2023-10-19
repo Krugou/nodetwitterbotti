@@ -30,9 +30,13 @@ jakbot.on('ready', () => {
 
 		const {sunrise, sunset} = data.results;
 		const convertTimeTo24HourFormat = (time) => {
-			const [hours, minutes, seconds] = time.split(/[:\s]/);
+			const [hours, minutes, seconds, period] = time.split(/[:\s]/);
 			const date = new Date();
-			date.setUTCHours(hours > 12 ? hours - 12 : hours, minutes, seconds);
+			date.setUTCHours(
+				period.toLowerCase() === 'pm' ? parseInt(hours) + 12 : hours,
+				minutes,
+				seconds
+			);
 			return date;
 		};
 
