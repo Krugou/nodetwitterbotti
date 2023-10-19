@@ -30,6 +30,10 @@ jakbot.on('ready', () => {
 		console.log(data);
 
 		const {sunrise, sunset} = data.results;
+		const time = sunrise || sunset;
+		const [hours, minutes, seconds] = time.split(/[:\s]/);
+		const date = new Date();
+		date.setUTCHours(hours > 12 ? hours - 12 : hours, minutes, seconds);
 		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunset:', sunset);
 		console.log('🚀 ~ file: imagesaver.js:33 ~ jakbot.on ~ sunrise:', sunrise);
 		const sunriseDate = new Date(`1970-01-01T${sunrise}Z`);
