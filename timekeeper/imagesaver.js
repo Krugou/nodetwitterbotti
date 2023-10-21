@@ -3,6 +3,8 @@ import 'dotenv/config';
 
 const PREFIX = '!'; // You can change this to your desired command prefix.
 const url = 'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
+const auroradata =
+	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-fi.png';
 const channelID = '1020376168496627742';
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
@@ -54,6 +56,7 @@ jakbot.on('ready', () => {
 			// Send the image to the channel.
 			const textChannel = channel;
 			textChannel.send({files: [url]});
+			textChannel.send({files: [auroradata]});
 		} else {
 			console.log("It's not sunrise or sunset, skipping image post.");
 		}
