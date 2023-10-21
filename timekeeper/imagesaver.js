@@ -7,6 +7,20 @@ const auroradata =
 	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-fi.png';
 const channelID = '1020376168496627742';
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
+let lastModifiedDate = '';
+const checkURLChange = async (url) => {
+	const response = await fetch(url, {method: 'HEAD'});
+	const currentModifiedDate = response.headers.get('last-modified');
+
+	if (lastModifiedDate && lastModifiedDate !== currentModifiedDate) {
+		console.log('Content has changed');
+		lastModifiedDate = currentModifiedDate;
+		return true;
+	} else {
+		console.log('Content has not changed');
+		return false;
+	}
+};
 jakbot.login(process.env.DISCORD_TOKEN);
 jakbot.on('ready', () => {
 	// Function to post the specified image every 30 minutes
@@ -52,13 +66,17 @@ jakbot.on('ready', () => {
 		const sunsetHours = sunsetDate.getUTCHours();
 		console.log(sunsetHours); // Output: sunset UTC hour
 		// Check if it is currently during sunrise or sunset
-		if (utcHours < sunriseHours || utcHours > sunsetHours) {
-			// Send the image to the channel.
-			const textChannel = channel;
-			textChannel.send({files: [url]});
-			textChannel.send({files: [auroradata]});
+		if (await checkURLChange(url)) {
+			if (utcHours < sunriseHours || utcHours > sunsetHours) {
+				// Send the image to the channel.
+				const textChannel = channel;
+				textChannel.send({files: [url]});
+				textChannel.send({files: [auroradata]});
+			} else {
+				console.log("It's not sunrise or sunset, skipping image post.");
+			}
 		} else {
-			console.log("It's not sunrise or sunset, skipping image post.");
+			console.log('its same image');
 		}
 	};
 
