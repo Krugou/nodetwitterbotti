@@ -12,14 +12,13 @@ jakbot.on('ready', () => {
 	// Function to post the specified image every 30 minutes
 	const postImageEvery30Minutes = async (channelID, url) => {
 		// Removed extra async
-		console.log(`Posting image to channel ${channelID}...`);
 		const channel = jakbot.channels.cache.get(channelID); // Replace with your channel ID
 		if (!channel) return console.error('The channel does not exist!');
 		const now = new Date();
 		// Get the current date and time in UTC
 		const latitude = 60.218393049680394; // Define latitude
 		const longitude = 24.39386623193809; // Define longitude
-
+		
 		// Construct the URL
 		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}}`;
 
@@ -28,7 +27,7 @@ jakbot.on('ready', () => {
 		const data = await response.json();
 
 		// Log the response
-		console.log(data);
+		// console.log(data);
 
 		const {sunrise, sunset} = data.results;
 		const convertTimeTo24HourFormat = (time) => {
@@ -46,17 +45,18 @@ jakbot.on('ready', () => {
 		const sunsetDate = convertTimeTo24HourFormat(sunset);
 
 		const utcHours = now.getUTCHours();
-		console.log(utcHours); // Output: current UTC hour
+		// console.log(utcHours); // Output: current UTC hour
 		const sunriseHours = sunriseDate.getUTCHours();
-		console.log(sunriseHours); // Output: sunrise UTC hour
+		// console.log(sunriseHours); // Output: sunrise UTC hour
 		const sunsetHours = sunsetDate.getUTCHours();
-		console.log(sunsetHours); // Output: sunset UTC hour
+		// console.log(sunsetHours); // Output: sunset UTC hour
 		// Check if it is currently during sunrise or sunset
 		if (utcHours < sunriseHours || utcHours > sunsetHours) {
 			// Send the image to the channel.
 			const textChannel = channel;
 			textChannel.send({files: [url]});
 			textChannel.send({files: [auroradata]});
+			console.log(`Posting image to channel ${textChannel}...`);
 		} else {
 			console.log("It's not sunrise or sunset, skipping image post.");
 		}
