@@ -1,6 +1,6 @@
+import crypto from 'crypto';
 import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
-
 const PREFIX = '!'; // You can change this to your desired command prefix.
 const url = 'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
 const auroradata =
@@ -8,7 +8,21 @@ const auroradata =
 const channelID = '1020376168496627742';
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
+let previousHash = '';
 jakbot.on('ready', () => {
+	const hasImageChanged = async (url) => {
+		const response = await fetch(url);
+		const buffer = await response.buffer();
+		const hash = crypto.createHash('sha1');
+		hash.update(buffer);
+		const currentHash = hash.digest('hex');
+		if (previousHash !== currentHash) {
+			previousHash = currentHash;
+			return true;
+		}
+		return false;
+	};
+
 	// Function to post the specified image every 30 minutes
 	const postImageEvery30Minutes = async (channelID, url) => {
 		// Removed extra async
@@ -18,7 +32,7 @@ jakbot.on('ready', () => {
 		// Get the current date and time in UTC
 		const latitude = 60.218393049680394; // Define latitude
 		const longitude = 24.39386623193809; // Define longitude
-		
+
 		// Construct the URL
 		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}}`;
 
@@ -51,14 +65,20 @@ jakbot.on('ready', () => {
 		const sunsetHours = sunsetDate.getUTCHours();
 		// console.log(sunsetHours); // Output: sunset UTC hour
 		// Check if it is currently during sunrise or sunset
-		if (utcHours < sunriseHours || utcHours > sunsetHours) {
-			// Send the image to the channel.
-			const textChannel = channel;
-			textChannel.send({files: [url]});
-			textChannel.send({files: [auroradata]});
-			console.log(`Posting image to channel ${textChannel}...`);
+		if (await hasImageChanged(url)) {
+			console.log('Image has changed, posting to channel.');
+
+			if (utcHours < sunriseHours || utcHours > sunsetHours) {
+				// Send the image to the channel.
+				const textChannel = channel;
+				textChannel.send({files: [url]});
+				textChannel.send({files: [auroradata]});
+				console.log(`Posting image to channel ${textChannel}...`);
+			} else {
+				console.log("It's not sunrise or sunset, skipping image post.");
+			}
 		} else {
-			console.log("It's not sunrise or sunset, skipping image post.");
+			console.log('Image has not changed, skipping image post.');
 		}
 	};
 
