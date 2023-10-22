@@ -1,4 +1,4 @@
-import {Client, Events, GatewayIntentBits} from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import 'dotenv/config';
 import fetch from 'node-fetch';
 
