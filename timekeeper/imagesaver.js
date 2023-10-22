@@ -85,7 +85,7 @@ jakbot.on('ready', () => {
 
 	// Set an interval to run the function every 30 minutes (in milliseconds)
 	postImageEvery30Minutes(channelID, url);
-	const intervalInMilliseconds = 30 * 60 * 1000; // 5 minutes
+	const intervalInMilliseconds = 5 * 60 * 1000; // 5 minutes
 	setInterval(
 		() => postImageEvery30Minutes(channelID, url),
 		intervalInMilliseconds
