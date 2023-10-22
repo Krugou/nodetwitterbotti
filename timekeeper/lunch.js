@@ -47,7 +47,10 @@ const checkMenu = (id, language, channelID) => {
 				return response.json();
 			})
 			.then((data) => {
-				if (data.MenusForDays[0].SetMenus.length > 0) {
+				if (
+					data.MenusForDays.length > 0 &&
+					data.MenusForDays[0].SetMenus.length > 0
+				) {
 					jakbot.channels.cache
 						.get(channelID)
 						.send(
