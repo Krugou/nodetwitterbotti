@@ -48,7 +48,7 @@ const checkMenu = (id, language, channelID) => {
 			})
 			.then((data) => {
 				let noLunchBoolean = false;
-				console.log(data);
+				// console.log(data);
 				if (data.MenusForDays.length === 0) {
 					noLunchBoolean = true;
 				}
