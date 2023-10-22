@@ -12,7 +12,8 @@ let previousHash = '';
 jakbot.on('ready', () => {
 	const hasImageChanged = async (url) => {
 		const response = await fetch(url);
-		const buffer = await response.buffer();
+		const arrayBuffer = await response.arrayBuffer();
+		const buffer = Buffer.from(arrayBuffer);
 		const hash = crypto.createHash('sha1');
 		hash.update(buffer);
 		const currentHash = hash.digest('hex');
@@ -66,7 +67,7 @@ jakbot.on('ready', () => {
 		// console.log(sunsetHours); // Output: sunset UTC hour
 		// Check if it is currently during sunrise or sunset
 		if (await hasImageChanged(url)) {
-			console.log('Image has changed, posting to channel.');
+			console.log('Image has changed');
 
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
 				// Send the image to the channel.
