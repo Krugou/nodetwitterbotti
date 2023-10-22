@@ -47,11 +47,12 @@ const checkMenu = (id, language, channelID) => {
 				return response.json();
 			})
 			.then((data) => {
-				if (
-					data.MenusForDays.length > 0 &&
-					data.MenusForDays[0] &&
-					data.MenusForDays[0].SetMenus.length > 0
-				) {
+				let noLunchBoolean = false;
+				console.log(data);
+				if (data.MenusForDays.length === 0) {
+					noLunchBoolean = true;
+				}
+				if (!noLunchBoolean) {
 					jakbot.channels.cache
 						.get(channelID)
 						.send(
@@ -89,21 +90,6 @@ const checkMenu = (id, language, channelID) => {
 							'(G) Gluteeniton, (L) Laktoositon, (VL) Vähälaktoosinen, (M) Maidoton, (*) Suomalaisten ravitsemussuositusten mukainen, (Veg) Soveltuu vegaaniruokavalioon, (ILM) Ilmastoystävällinen, (VS) Sis. tuoretta valkosipulia, (A) Sis. Allergeeneja'
 						);
 				} else {
-					jakbot.channels.cache
-						.get(channelID)
-						.send(
-							' \0 \n Nimi: ' +
-								data.RestaurantName +
-								'\n Päiväys: ' +
-								data.MenusForDays[0].Date +
-								'\n Lounasaika: ' +
-								data.MenusForDays[0].LunchTime +
-								'\n Linkki:' +
-								data.RestaurantUrl +
-								'\n ' +
-								data.Footer +
-								'\n '
-						);
 					jakbot.channels.cache.get(channelID).send('Ei lounasta tänään');
 				}
 			});
