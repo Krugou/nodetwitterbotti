@@ -49,6 +49,7 @@ const checkMenu = (id, language, channelID) => {
 			.then((data) => {
 				if (
 					data.MenusForDays.length > 0 &&
+					data.MenusForDays[0] &&
 					data.MenusForDays[0].SetMenus.length > 0
 				) {
 					jakbot.channels.cache
