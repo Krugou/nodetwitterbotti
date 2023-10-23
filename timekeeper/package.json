@@ -28,6 +28,7 @@
 		"node-fetch": "^3.3.0",
 		"nodemon": "^2.0.21",
 		"path": "^0.12.7",
+		"svg-png-converter": "^0.0.9",
 		"xmldom": "^0.6.0"
 	}
 }

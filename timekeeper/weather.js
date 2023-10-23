@@ -48,7 +48,7 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
 			.then((response) => {
 				return response.text();
 			})
-			.then((xml) => {
+			.then(async (xml) => {
 				const parser = new DOMParser();
 				const doc = parser.parseFromString(xml, 'application/xml');
 				let message = '\0 \n Karamalmin säätiedotus:';
@@ -122,8 +122,10 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
 						} else {
 							weather = 'tuntematon';
 						}
-						let weatherimage = './images/dark/' + paramValue + '.svg';
+
+						let weatherimage = './images/dark/' + paramValue + '.png';
 						message += '\0 \n' + ' ' + weather;
+
 						jakbot.channels.cache.get(CHANNELID).send({files: [weatherimage]});
 					}
 					if (paramName === 'temperature' && i === hoursfromnow * 3 - 3) {
