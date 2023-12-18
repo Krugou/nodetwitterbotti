@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
+import Jimp from 'jimp';
 const PREFIX = '!'; // You can change this to your desired command prefix.
 const url = 'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
 const auroradata =
@@ -70,11 +71,38 @@ jakbot.on('ready', () => {
 			console.log('Image has changed');
 
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
-				// Send the image to the channel.
-				const textChannel = channel;
-				textChannel.send({files: [url]});
-				textChannel.send({files: [auroradata]});
-				console.log(`Posting image to channel ${textChannel}...`);
+				// Check if auroradata image contains #FF0000
+				const image = await Jimp.read(auroradata);
+				let containsRed = false;
+
+				image.scan(
+					0,
+					0,
+					image.bitmap.width,
+					image.bitmap.height,
+					function (x, y, idx) {
+						const red = this.bitmap.data[idx + 0];
+						const green = this.bitmap.data[idx + 1];
+						const blue = this.bitmap.data[idx + 2];
+
+						if (red === 255 && green === 0 && blue === 0) {
+							containsRed = true;
+							this.bitmap.data[idx + 0] = 255;
+							this.bitmap.data[idx + 1] = 255;
+							this.bitmap.data[idx + 2] = 255;
+						}
+					}
+				);
+
+				if (containsRed) {
+					// Send the image to the channel.
+					const textChannel = channel;
+					textChannel.send({files: [url]});
+					textChannel.send({files: [auroradata]});
+					console.log(`Posting image to channel ${textChannel}...`);
+				} else {
+					console.log("Image doesn't contain #FF0000, skipping image post.");
+				}
 			} else {
 				console.log("It's not sunrise or sunset, skipping image post.");
 			}
