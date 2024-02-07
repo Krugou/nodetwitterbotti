@@ -7,8 +7,8 @@ module.exports = {
 			cron_restart: '0 5,8,12 * * 1-5',
 		},
 		{
-			name: 'jak',
-			script: 'jak.js',
+			name: 'timekeeper',
+			script: 'timekeeper.js',
 			watch: true,
 			cron_restart: '0 4 * * 1-5',
 		},
