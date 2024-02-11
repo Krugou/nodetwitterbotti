@@ -36,7 +36,15 @@ jakbot.on('ready', (jakbot) => {
 });
 
 const checkMenu = (id, language, channelID) => {
-	jakbot.on('ready', () => {
+	jakbot.on( 'ready', () => {
+		const startMessageChannelID = '1090689756553293885';
+		const startMessageChannel = jakbot.channels.cache.get(
+			startMessageChannelID
+		); 
+		startMessageChannel.send( 'Lunch.js is now online! ', new Date().toISOString() );
+		setTimeout(() => {
+			startMessageChannel.bulkDelete(1);
+		}, 20 * 60 * 1000);
 		fetch(
 			'https://www.compass-group.fi/menuapi/feed/json?costNumber=' +
 				id +

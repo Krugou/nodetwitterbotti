@@ -43,7 +43,18 @@ const checkWeather = (lat, lon, hoursfromnow, CHANNELID) => {
 		lon +
 		'&parameters=temperature,windSpeedMS,WeatherSymbol3';
 
-	jakbot.on('ready', (jakbot) => {
+	jakbot.on( 'ready', ( jakbot ) => {
+		const startMessageChannelID = '1090689756553293885';
+		const startMessageChannel = jakbot.channels.cache.get(
+			startMessageChannelID
+		);
+		startMessageChannel.send(
+			'weather.js is now online! ',
+			new Date().toISOString()
+		);
+		setTimeout(() => {
+			startMessageChannel.bulkDelete(1);
+		}, 20 * 60 * 1000);
 		fetch(weatherData)
 			.then((response) => {
 				return response.text();

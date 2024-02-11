@@ -13,6 +13,15 @@ jakbot.once(Events.ClientReady, (c) => {
 });
 
 jakbot.on('ready', (jakbot) => {
+	const startMessageChannelID = '1090689756553293885';
+	const startMessageChannel = jakbot.channels.cache.get(startMessageChannelID);
+	startMessageChannel.send(
+		'timekeeper.js is now online! ',
+		new Date().toISOString()
+	);
+	setTimeout(() => {
+		startMessageChannel.bulkDelete(1);
+	}, 20 * 60 * 1000);
 	const channel = jakbot.channels.cache.get(channelID);
 	channel.messages
 		.fetch({limit: 100})

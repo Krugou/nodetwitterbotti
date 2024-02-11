@@ -18,6 +18,15 @@ const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
 let previousHash = '';
 jakbot.on('ready', () => {
+	const startMessageChannelID = '1090689756553293885';
+	const startMessageChannel = jakbot.channels.cache.get(startMessageChannelID);
+	startMessageChannel.send(
+		'imagesaver.js is now online! ',
+		new Date().toISOString()
+	);
+	setTimeout(() => {
+		startMessageChannel.bulkDelete(1);
+	}, 20 * 60 * 1000);
 	const hasImageChanged = async (url) => {
 		const response = await fetch(url);
 		const arrayBuffer = await response.arrayBuffer();

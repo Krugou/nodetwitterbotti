@@ -38,7 +38,18 @@ const deleteMessages = () => {
 const onlineChecker = (limit) => {
 	jakbot.on('ready', (jakbot) => {
 		jakbot.user.setUsername('Onlinechecker');
-		jakbot.user.setActivity('Nodejs', {type: 'PLAYING'});
+		jakbot.user.setActivity( 'Nodejs', { type: 'PLAYING' } );
+		const startMessageChannelID = '1090689756553293885';
+		const startMessageChannel = jakbot.channels.cache.get(
+			startMessageChannelID
+		);
+		startMessageChannel.send(
+			'onlinechecker.js is now online! ',
+			new Date().toISOString()
+		);
+		setTimeout(() => {
+			startMessageChannel.bulkDelete(1);
+		}, 20 * 60 * 1000);
 		// check if https://media.mw.metropolia.fi/wbma/media/ is online
 		fetch('https://media.mw.metropolia.fi/wbma/media?limit=' + limit, {
 			method: 'GET',
