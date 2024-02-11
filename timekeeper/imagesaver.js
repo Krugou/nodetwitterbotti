@@ -3,9 +3,16 @@ import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
 import Jimp from 'jimp';
 const PREFIX = '!'; // You can change this to your desired command prefix.
-const url = 'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
+const northurl =
+	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR.jpg';
+const middleurl =
+	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR_AllSky.jpg';
+const southurl =
+	'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
 const auroradata =
 	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-fi.png';
+const auroradatanew =
+	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-latest-fi.png';
 const channelID = '1020376168496627742';
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
@@ -67,7 +74,7 @@ jakbot.on('ready', () => {
 		const sunsetHours = sunsetDate.getUTCHours();
 		// console.log(sunsetHours); // Output: sunset UTC hour
 		// Check if it is currently during sunrise or sunset
-		if (await hasImageChanged(url)) {
+		if (await hasImageChanged(southurl)) {
 			console.log('Image has changed');
 
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
@@ -97,8 +104,14 @@ jakbot.on('ready', () => {
 				if (containsRed) {
 					// Send the image to the channel.
 					const textChannel = channel;
-					textChannel.send({files: [url]});
+					textChannel.send({files: [northurl]});
+					textChannel.send('Nyrölä Observatory, Finland');
+					textChannel.send({files: [middleurl]});
+					textChannel.send('Hankasalmi observatory Jyväskylän Sirius ry');
+					textChannel.send({files: [southurl]});
+					textChannel.send('Metsähovin radiotutkimusasema(Aalto yliopisto)');
 					textChannel.send({files: [auroradata]});
+					textChannel.send({files: [auroradatanew]});
 					console.log(`Posting image to channel ${textChannel}...`);
 				} else {
 					console.log("Image doesn't contain #FF0000, skipping image post.");
