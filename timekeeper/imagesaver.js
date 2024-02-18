@@ -86,6 +86,7 @@ jakbot.on('ready', () => {
 		// Check if it is currently during sunrise or sunset
 		if (await hasImageChanged(southurl)) {
 			console.log('Image has changed');
+			startMessageChannel.send('Image has changed');
 
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
 				// Check if auroradata image contains #EE6777 or #CDBA44

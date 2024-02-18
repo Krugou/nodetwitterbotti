@@ -168,4 +168,5 @@ const checkReservations = (channelID, nameofgroup) => {
 };
 
 checkReservations(channelID, 'tvt21-m');
+
 checkReservations(logs, 'tvt21-m');
