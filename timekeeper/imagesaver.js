@@ -27,8 +27,8 @@ jakbot.on('ready', () => {
 	setTimeout(() => {
 		startMessageChannel.bulkDelete(1);
 	}, 20 * 60 * 1000);
-	const hasImageChanged = async (url) => {
-		const response = await fetch(url);
+	const hasImageChanged = async (southurl) => {
+		const response = await fetch(southurl);
 		const arrayBuffer = await response.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
 		const hash = crypto.createHash('sha1');
@@ -42,7 +42,7 @@ jakbot.on('ready', () => {
 	};
 
 	// Function to post the specified image every 30 minutes
-	const postImageEvery30Minutes = async (channelID, url) => {
+	const postImageEvery30Minutes = async (channelID, southurl) => {
 		// Removed extra async
 		const channel = jakbot.channels.cache.get(channelID); // Replace with your channel ID
 		if (!channel) return console.error('The channel does not exist!');
@@ -87,9 +87,9 @@ jakbot.on('ready', () => {
 			console.log('Image has changed');
 
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
-				// Check if auroradata image contains #FF0000
+				// Check if auroradata image contains #EE6777 or #CDBA44
 				const image = await Jimp.read(auroradata);
-				let containsRed = false;
+				let containsColor = false;
 
 				image.scan(
 					0,
@@ -101,42 +101,61 @@ jakbot.on('ready', () => {
 						const green = this.bitmap.data[idx + 1];
 						const blue = this.bitmap.data[idx + 2];
 
-						if (red === 255 && green === 0 && blue === 0) {
-							containsRed = true;
-							this.bitmap.data[idx + 0] = 255;
-							this.bitmap.data[idx + 1] = 255;
-							this.bitmap.data[idx + 2] = 255;
+						// Check for #EE6777
+						if (red === 238 && green === 103 && blue === 119) {
+							containsColor = true;
+						}
+						// Check for #CDBA44
+						else if (red === 205 && green === 186 && blue === 68) {
+							containsColor = true;
 						}
 					}
 				);
 
-				if (containsRed) {
+				if (containsColor) {
 					// Send the image to the channel.
 					const textChannel = channel;
-					textChannel.send({files: [northurl]});
-					textChannel.send('Nyrölä Observatory, Finland');
-					textChannel.send({files: [middleurl]});
-					textChannel.send('Hankasalmi observatory Jyväskylän Sirius ry');
-					textChannel.send({files: [southurl]});
-					textChannel.send('Metsähovin radiotutkimusasema(Aalto yliopisto)');
-					textChannel.send({files: [auroradata]});
-					textChannel.send({files: [auroradatanew]});
+					async function sendMessages() {
+						await textChannel.send({files: [northurl]});
+						await textChannel.send('Nyrölä Observatory, Finland');
+						await textChannel.send({files: [middleurl]});
+						await textChannel.send(
+							'Hankasalmi observatory Jyväskylän Sirius ry'
+						);
+						await textChannel.send({files: [southurl]});
+						await textChannel.send(
+							'Metsähovin radiotutkimusasema(Aalto yliopisto)'
+						);
+
+						await textChannel.send({files: [auroradatanew]});
+					}
+
+					sendMessages();
 					console.log(`Posting image to channel ${textChannel}...`);
 				} else {
-					console.log("Image doesn't contain #FF0000, skipping image post.");
+					startMessageChannel.send(
+						"Image doesn't contain #EE6777 or #CDBA44, skipping image post."
+					);
+					console.log(
+						"Image doesn't contain #EE6777 or #CDBA44, skipping image post."
+					);
 				}
 			} else {
+				startMessageChannel.send(
+					"It's not sunrise or sunset, skipping image post."
+				);
 				console.log("It's not sunrise or sunset, skipping image post.");
 			}
 		} else {
+			startMessageChannel.send('Image has not changed, skipping image post.');
 			console.log('Image has not changed, skipping image post.');
 		}
 	};
 
-	postImageEvery30Minutes(channelID, url);
+	postImageEvery30Minutes(channelID, southurl);
 	const intervalInMilliseconds = 5 * 60 * 1000; // 5 minutes
 	setInterval(
-		() => postImageEvery30Minutes(channelID, url),
+		() => postImageEvery30Minutes(channelID, southurl),
 		intervalInMilliseconds
 	);
 });
