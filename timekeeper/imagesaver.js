@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import {Client, Events, GatewayIntentBits} from 'discord.js';
 import 'dotenv/config';
 import Jimp from 'jimp';
+import {start} from 'repl';
 const PREFIX = '!'; // You can change this to your desired command prefix.
 const northurl =
 	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR.jpg';
@@ -132,6 +133,9 @@ jakbot.on('ready', () => {
 
 					sendMessages();
 					console.log(`Posting image to channel ${textChannel}...`);
+					startMessageChannel.send(
+						`Posting image to channel ${textChannel}...`
+					);
 				} else {
 					startMessageChannel.send(
 						"Image doesn't contain #EE6777 or #CDBA44, skipping image post."
