@@ -46,7 +46,7 @@ module.exports = {
 			watch_delay: 3000,
 		},
 		{
-			name: 'gitPuller'
+			name: 'gitPuller',
 			script: 'gitPuller.js',
 			watch: true,
 			cron_restart: '0 1 * * *',
