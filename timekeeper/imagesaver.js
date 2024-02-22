@@ -10,8 +10,7 @@ const middleurl =
 	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR_AllSky.jpg';
 const southurl =
 	'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
-const auroradata =
-	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-fi.png';
+
 const auroradatanew =
 	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-latest-fi.png';
 const channelID = '1020376168496627742';
@@ -90,7 +89,7 @@ jakbot.on('ready', () => {
 
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
 				// Check if auroradata image contains #EE6777 or #CDBA44
-				const image = await Jimp.read(auroradata);
+				const image = await Jimp.read(auroradatanew);
 				let containsColor = false;
 
 				image.scan(
@@ -106,10 +105,12 @@ jakbot.on('ready', () => {
 						// Check for #EE6777
 						if (red === 238 && green === 103 && blue === 119) {
 							containsColor = true;
+							startMessageChannelID.send('Aurora change high ');
 						}
 						// Check for #CDBA44
 						else if (red === 205 && green === 186 && blue === 68) {
 							containsColor = true;
+							startMessageChannelID.send('Aurora change low ');
 						}
 					}
 				);
@@ -158,7 +159,7 @@ jakbot.on('ready', () => {
 	};
 
 	postImageEvery30Minutes(channelID, southurl);
-	const intervalInMilliseconds = 5 * 60 * 1000; // 5 minutes
+	const intervalInMilliseconds = 2 * 60 * 1000; // 5 minutes
 	setInterval(
 		() => postImageEvery30Minutes(channelID, southurl),
 		intervalInMilliseconds
