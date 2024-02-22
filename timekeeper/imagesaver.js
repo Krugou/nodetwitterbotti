@@ -40,54 +40,61 @@ jakbot.on('ready', () => {
 		}
 		return false;
 	};
-
-	// Function to post the specified image every 30 minutes
-	const postImageEvery30Minutes = async (channelID, southurl) => {
-		// Removed extra async
-		const channel = jakbot.channels.cache.get(channelID); // Replace with your channel ID
-		if (!channel) return console.error('The channel does not exist!');
-		const now = new Date();
-		// Get the current date and time in UTC
-		const latitude = 60.218393049680394; // Define latitude
-		const longitude = 24.39386623193809; // Define longitude
-
+	const getSunriseSunsetTimes = async (latitude, longitude) => {
 		// Construct the URL
-		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}}`;
+		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}`;
 
 		// Fetch the data
 		const response = await fetch(urlSunriseSunset);
 		const data = await response.json();
 
-		// Log the response
-		// console.log(data);
-
 		const {sunrise, sunset} = data.results;
-		const convertTimeTo24HourFormat = (time) => {
-			const [hours, minutes, seconds, period] = time.split(/[:\s]/);
-			const date = new Date();
-			date.setUTCHours(
-				period.toLowerCase() === 'pm' ? parseInt(hours) + 12 : hours,
-				minutes,
-				seconds
-			);
-			return date;
-		};
 
 		const sunriseDate = convertTimeTo24HourFormat(sunrise);
 		const sunsetDate = convertTimeTo24HourFormat(sunset);
 
-		const utcHours = now.getUTCHours();
-		// console.log(utcHours); // Output: current UTC hour
 		const sunriseHours = sunriseDate.getUTCHours();
-		// console.log(sunriseHours); // Output: sunrise UTC hour
 		const sunsetHours = sunsetDate.getUTCHours();
-		// console.log(sunsetHours); // Output: sunset UTC hour
+
+		return {sunriseHours, sunsetHours};
+	};
+	const convertTimeTo24HourFormat = (time) => {
+		const [hours, minutes, seconds, period] = time.split(/[:\s]/);
+		const date = new Date();
+		date.setUTCHours(
+			period.toLowerCase() === 'pm' ? parseInt(hours) + 12 : hours,
+			minutes,
+			seconds
+		);
+		return date;
+	};
+	const sendMessages = async (textChannel) => {
+		await textChannel.send({files: [northurl]});
+		await textChannel.send('Nyrölä Observatory, Finland');
+		await textChannel.send({files: [middleurl]});
+		await textChannel.send('Hankasalmi observatory Jyväskylän Sirius ry');
+		await textChannel.send({files: [southurl]});
+		await textChannel.send('Metsähovin radiotutkimusasema(Aalto yliopisto)');
+		await textChannel.send({files: [auroradatanew]});
+	};
+	const postImage = async (channelID, southurl) => {
+		const channel = jakbot.channels.cache.get(channelID);
+		if (!channel) return console.error('The channel does not exist!');
+		// Get the current date and time in UTC
+		const latitude = 60.218393049680394; // Define latitude
+		const longitude = 24.39386623193809; // Define longitude
+
+		const {sunriseHours, sunsetHours} = await getSunriseSunsetTimes(
+			latitude,
+			longitude
+		);
 		// Check if it is currently during sunrise or sunset
 		if (await hasImageChanged(southurl)) {
 			console.log('Image has changed');
 			startMessageChannel.send('Image has changed');
-
+			const utcHours = new Date().getUTCHours();
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
+				await startMessageChannel.send({files: [southurl]});
 				// Check if auroradata image contains #EE6777 or #CDBA44
 				const image = await Jimp.read(auroradatanew);
 				let containsColor = false;
@@ -97,7 +104,7 @@ jakbot.on('ready', () => {
 					0,
 					image.bitmap.width,
 					image.bitmap.height,
-					function (x, y, idx) {
+					async function (x, y, idx) {
 						const red = this.bitmap.data[idx + 0];
 						const green = this.bitmap.data[idx + 1];
 						const blue = this.bitmap.data[idx + 2];
@@ -105,11 +112,13 @@ jakbot.on('ready', () => {
 						// Check for #EE6777
 						if (red === 238 && green === 103 && blue === 119) {
 							containsColor = true;
+							await startMessageChannel.send({files: [auroradatanew]});
 							startMessageChannelID.send('Aurora change high ');
 						}
 						// Check for #CDBA44
 						else if (red === 205 && green === 186 && blue === 68) {
 							containsColor = true;
+							await startMessageChannel.send({files: [auroradatanew]});
 							startMessageChannelID.send('Aurora change low ');
 						}
 					}
@@ -118,22 +127,7 @@ jakbot.on('ready', () => {
 				if (containsColor) {
 					// Send the image to the channel.
 					const textChannel = channel;
-					async function sendMessages() {
-						await textChannel.send({files: [northurl]});
-						await textChannel.send('Nyrölä Observatory, Finland');
-						await textChannel.send({files: [middleurl]});
-						await textChannel.send(
-							'Hankasalmi observatory Jyväskylän Sirius ry'
-						);
-						await textChannel.send({files: [southurl]});
-						await textChannel.send(
-							'Metsähovin radiotutkimusasema(Aalto yliopisto)'
-						);
-
-						await textChannel.send({files: [auroradatanew]});
-					}
-
-					sendMessages();
+					sendMessages(textChannel);
 					console.log(`Posting image to channel ${textChannel}...`);
 					startMessageChannel.send(
 						`Posting image to channel ${textChannel}...`
@@ -158,10 +152,7 @@ jakbot.on('ready', () => {
 		}
 	};
 
-	postImageEvery30Minutes(channelID, southurl);
-	const intervalInMilliseconds = 2 * 60 * 1000; // 5 minutes
-	setInterval(
-		() => postImageEvery30Minutes(channelID, southurl),
-		intervalInMilliseconds
-	);
+	postImage(channelID, southurl);
+	const intervalInMilliseconds = 2 * 60 * 1000; // 2 minutes
+	setInterval(() => postImage(channelID, southurl), intervalInMilliseconds);
 });
