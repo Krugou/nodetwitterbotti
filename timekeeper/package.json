@@ -17,7 +17,7 @@
 		"cors": "^2.8.5",
 		"discord-reply": "^0.1.2",
 		"discord.js": "^14.14.1",
-		"dotenv": "^16.4.4",
+		"dotenv": "^16.4.5",
 		"ejs": "^3.1.9",
 		"express": "^4.18.2",
 		"express-validator": "^7.0.1",

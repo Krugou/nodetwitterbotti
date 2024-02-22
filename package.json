@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "dotenv": "^16.4.4",
+    "dotenv": "^16.4.5",
     "init": "^0.1.2",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.0.3",
