@@ -194,6 +194,7 @@ jakbot.on('ready', () => {
 	};
 
 	postImage(channelID, southurl);
-	const intervalInMilliseconds = 2 * 60 * 1000; // 2 minutes
+	const intervalInMilliseconds =
+		(Math.floor(Math.random() * 10) + 1) * 60 * 1000; // 1 to 10 minutes
 	setInterval(() => postImage(channelID, southurl), intervalInMilliseconds);
 });
