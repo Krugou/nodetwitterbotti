@@ -19,6 +19,7 @@ jakbot.login(process.env.DISCORD_TOKEN);
 let previousHash = '';
 jakbot.on('ready', () => {
 	const startMessageChannelID = '1090689756553293885';
+
 	const startMessageChannel = jakbot.channels.cache.get(startMessageChannelID);
 	startMessageChannel.send(
 		'imagesaver.js is now online! ',
@@ -27,6 +28,11 @@ jakbot.on('ready', () => {
 	setTimeout(() => {
 		startMessageChannel.bulkDelete(1);
 	}, 20 * 60 * 1000);
+	/**
+	 * Checks if the image at the specified URL has changed.
+	 * @param {string} southurl - The URL of the image to check.
+	 * @returns {Promise<boolean>} - A promise that resolves to true if the image has changed, false otherwise.
+	 */
 	const hasImageChanged = async (southurl) => {
 		const response = await fetch(southurl);
 		const arrayBuffer = await response.arrayBuffer();
@@ -40,6 +46,12 @@ jakbot.on('ready', () => {
 		}
 		return false;
 	};
+	/**
+	 * Retrieves the sunrise and sunset times for a given latitude and longitude.
+	 * @param {number} latitude - The latitude of the location.
+	 * @param {number} longitude - The longitude of the location.
+	 * @returns {Promise<{sunriseHours: number, sunsetHours: number}>} The sunrise and sunset hours in UTC format.
+	 */
 	const getSunriseSunsetTimes = async (latitude, longitude) => {
 		// Construct the URL
 		const urlSunriseSunset = `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}`;
@@ -58,6 +70,11 @@ jakbot.on('ready', () => {
 
 		return {sunriseHours, sunsetHours};
 	};
+	/**
+	 * Converts a time string to 24-hour format.
+	 * @param {string} time - The time string in the format "HH:MM:SS AM/PM".
+	 * @returns {Date} - The converted time in 24-hour format as a Date object.
+	 */
 	const convertTimeTo24HourFormat = (time) => {
 		const [hours, minutes, seconds, period] = time.split(/[:\s]/);
 		const date = new Date();
@@ -68,6 +85,11 @@ jakbot.on('ready', () => {
 		);
 		return date;
 	};
+	/**
+	 * Sends messages with image files to the specified text channel.
+	 * @param {TextChannel} textChannel - The text channel to send the messages to.
+	 * @returns {Promise<void>} - A promise that resolves when all messages are sent.
+	 */
 	const sendMessages = async (textChannel) => {
 		await textChannel.send({files: [northurl]});
 		await textChannel.send('Nyrölä Observatory, Finland');
@@ -77,6 +99,11 @@ jakbot.on('ready', () => {
 		await textChannel.send('Metsähovin radiotutkimusasema(Aalto yliopisto)');
 		await textChannel.send({files: [auroradatanew]});
 	};
+	/**
+	 * Checks if an image contains specific colors and performs actions accordingly.
+	 * @param {Image} image - The image to be checked.
+	 * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating whether the image contains the specified colors.
+	 */
 	const checkImageColor = async (image) => {
 		let containsColor = false;
 		await new Promise((resolve, reject) => {
@@ -112,6 +139,12 @@ jakbot.on('ready', () => {
 		return containsColor;
 	};
 
+	/**
+	 * Posts an image to a specified channel based on sunrise and sunset times.
+	 * @param {string} channelID - The ID of the channel to post the image in.
+	 * @param {string} southurl - The URL of the image to be posted.
+	 * @returns {Promise<void>} - A promise that resolves once the image is posted.
+	 */
 	const postImage = async (channelID, southurl) => {
 		const channel = jakbot.channels.cache.get(channelID);
 		if (!channel) return console.error('The channel does not exist!');
