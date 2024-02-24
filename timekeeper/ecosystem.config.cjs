@@ -22,7 +22,7 @@ module.exports = {
 			name: 'lunch',
 			script: 'lunch.js',
 			watch: true,
-			cron_restart: '0 10,12 * * 1-5',
+			cron_restart: '0 10,11,12 * * 1-5',
 			min_uptime: 10000,
 			ignore_watch: ['node_modules', 'logs', 'package-lock.json'],
 			watch_delay: 3000,
@@ -51,8 +51,8 @@ module.exports = {
 			watch: true,
 			cron_restart: '0 1 * * *',
 			min_uptime: 10000,
-			ignore_watch: [ 'node_modules', 'logs', 'package-lock.json' ],
+			ignore_watch: ['node_modules', 'logs', 'package-lock.json'],
 			watch_delay: 3000,
-		}
+		},
 	],
 };
