@@ -47,7 +47,7 @@ module.exports = {
 		},
 		{
 			name: 'gitPuller',
-			script: 'gitPuller.js',
+			script: 'gitPuller.cjs',
 			watch: true,
 			cron_restart: '0 1 * * *',
 			min_uptime: 10000,
