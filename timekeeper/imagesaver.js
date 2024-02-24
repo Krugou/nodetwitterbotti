@@ -77,10 +77,45 @@ jakbot.on('ready', () => {
 		await textChannel.send('Metsähovin radiotutkimusasema(Aalto yliopisto)');
 		await textChannel.send({files: [auroradatanew]});
 	};
+	const checkImageColor = async (image) => {
+		let containsColor = false;
+		await new Promise((resolve, reject) => {
+			image.scan(
+				0,
+				0,
+				image.bitmap.width,
+				image.bitmap.height,
+				function (x, y, idx) {
+					const red = this.bitmap.data[idx + 0];
+					const green = this.bitmap.data[idx + 1];
+					const blue = this.bitmap.data[idx + 2];
+
+					// Check for #EE6777
+					if (red === 238 && green === 103 && blue === 119) {
+						containsColor = true;
+						startMessageChannel.send({files: [auroradatanew]});
+						startMessageChannel.send('Aurora change high ');
+					}
+					// Check for #CDBA44
+					else if (red === 205 && green === 186 && blue === 68) {
+						containsColor = true;
+						startMessageChannel.send({files: [auroradatanew]});
+						startMessageChannel.send('Aurora change low ');
+					}
+
+					if (x === image.bitmap.width - 1 && y === image.bitmap.height - 1) {
+						resolve();
+					}
+				}
+			);
+		});
+		return containsColor;
+	};
+
 	const postImage = async (channelID, southurl) => {
 		const channel = jakbot.channels.cache.get(channelID);
 		if (!channel) return console.error('The channel does not exist!');
-		// Get the current date and time in UTC
+
 		const latitude = 60.218393049680394; // Define latitude
 		const longitude = 24.39386623193809; // Define longitude
 
@@ -88,44 +123,17 @@ jakbot.on('ready', () => {
 			latitude,
 			longitude
 		);
-		// Check if it is currently during sunrise or sunset
+
 		if (await hasImageChanged(southurl)) {
 			console.log('Image has changed');
 			startMessageChannel.send('Image has changed');
 			const utcHours = new Date().getUTCHours();
 			if (utcHours < sunriseHours || utcHours > sunsetHours) {
 				await startMessageChannel.send({files: [southurl]});
-				// Check if auroradata image contains #EE6777 or #CDBA44
 				const image = await Jimp.read(auroradatanew);
-				let containsColor = false;
-
-				image.scan(
-					0,
-					0,
-					image.bitmap.width,
-					image.bitmap.height,
-					async function (x, y, idx) {
-						const red = this.bitmap.data[idx + 0];
-						const green = this.bitmap.data[idx + 1];
-						const blue = this.bitmap.data[idx + 2];
-
-						// Check for #EE6777
-						if (red === 238 && green === 103 && blue === 119) {
-							containsColor = true;
-							await startMessageChannel.send({files: [auroradatanew]});
-							startMessageChannelID.send('Aurora change high ');
-						}
-						// Check for #CDBA44
-						else if (red === 205 && green === 186 && blue === 68) {
-							containsColor = true;
-							await startMessageChannel.send({files: [auroradatanew]});
-							startMessageChannelID.send('Aurora change low ');
-						}
-					}
-				);
+				const containsColor = await checkImageColor(image);
 
 				if (containsColor) {
-					// Send the image to the channel.
 					const textChannel = channel;
 					sendMessages(textChannel);
 					console.log(`Posting image to channel ${textChannel}...`);
