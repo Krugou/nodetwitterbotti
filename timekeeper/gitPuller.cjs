@@ -14,7 +14,7 @@ const gitPullAndRestart = () => {
 
 		console.log('Git pull successful. Restarting...');
 		exec(
-			'pm2 delete all &&  pm2 start ecosystem.config.cjs && pm2 save',
+			'npm i && pm2 delete all &&  pm2 start ecosystem.config.cjs && pm2 save',
 			(error, stdout, stderr) => {
 				if (error) {
 					console.error(`Error restarting the application: ${error}`);
