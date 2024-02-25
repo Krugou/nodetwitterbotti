@@ -13,6 +13,7 @@ const southurl =
 
 const auroradatanew =
 	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-latest-fi.png';
+// const auroradatanew = 'https://users.metropolia.fi/~aleksino/map-latest-fi.png';
 const channelID = '1020376168496627742';
 const jakbot = new Client({intents: [GatewayIntentBits.Guilds]});
 jakbot.login(process.env.DISCORD_TOKEN);
@@ -26,13 +27,17 @@ jakbot.on('ready', () => {
 		new Date().toISOString()
 	);
 	setTimeout(() => {
-		startMessageChannel.bulkDelete(1);
+		startMessageChannel.bulkDelete(10);
 	}, 20 * 60 * 1000);
 	/**
 	 * Checks if the image at the specified URL has changed.
 	 * @param {string} southurl - The URL of the image to check.
 	 * @returns {Promise<boolean>} - A promise that resolves to true if the image has changed, false otherwise.
 	 */
+	const sendLogMessage = (message) => {
+		startMessageChannel.send(message);
+		console.log(message);
+	};
 	const hasImageChanged = async (southurl) => {
 		const response = await fetch(southurl);
 		const arrayBuffer = await response.arrayBuffer();
@@ -106,6 +111,9 @@ jakbot.on('ready', () => {
 	 */
 	const checkImageColor = async (image) => {
 		let containsColor = false;
+		let highMessageSent = false;
+		let lowMessageSent = false;
+
 		await new Promise((resolve, reject) => {
 			image.scan(
 				0,
@@ -117,17 +125,21 @@ jakbot.on('ready', () => {
 					const green = this.bitmap.data[idx + 1];
 					const blue = this.bitmap.data[idx + 2];
 
-					// Check for #EE6777
-					if (red === 238 && green === 103 && blue === 119) {
+					// Check for #EE6677
+					if (red === 238 && green === 102 && blue === 119) {
 						containsColor = true;
-						startMessageChannel.send({files: [auroradatanew]});
-						startMessageChannel.send('Aurora change high ');
+						if (!highMessageSent) {
+							sendLogMessage(`Aurora change high`);
+							highMessageSent = true;
+						}
 					}
 					// Check for #CDBA44
-					else if (red === 205 && green === 186 && blue === 68) {
+					else if (red === 204 && green === 187 && blue === 68) {
 						containsColor = true;
-						startMessageChannel.send({files: [auroradatanew]});
-						startMessageChannel.send('Aurora change low ');
+						if (!lowMessageSent) {
+							sendLogMessage(`Aurora change low`);
+							lowMessageSent = true;
+						}
 					}
 
 					if (x === image.bitmap.width - 1 && y === image.bitmap.height - 1) {
@@ -157,39 +169,29 @@ jakbot.on('ready', () => {
 			longitude
 		);
 
-		if (await hasImageChanged(southurl)) {
-			console.log('Image has changed');
-			startMessageChannel.send('Image has changed');
-			const utcHours = new Date().getUTCHours();
-			if (utcHours < sunriseHours || utcHours > sunsetHours) {
-				await startMessageChannel.send({files: [southurl]});
-				const image = await Jimp.read(auroradatanew);
-				const containsColor = await checkImageColor(image);
+		const utcHours = new Date().getUTCHours();
+		if (utcHours < sunriseHours || utcHours > sunsetHours) {
+			await startMessageChannel.send({files: [southurl]});
+			const image = await Jimp.read(auroradatanew);
+			const containsColor = await checkImageColor(image);
 
-				if (containsColor) {
-					const textChannel = channel;
-					sendMessages(textChannel);
-					console.log(`Posting image to channel ${textChannel}...`);
-					startMessageChannel.send(
-						`Posting image to channel ${textChannel}...`
-					);
+			if (containsColor) {
+				if (await hasImageChanged(southurl)) {
+					sendLogMessage(`Image has changed`);
+					sendMessages(channel);
+					sendLogMessage(`Posting image to channel ${textChannel}...`);
 				} else {
-					startMessageChannel.send(
-						"Image doesn't contain #EE6777 or #CDBA44, skipping image post."
-					);
-					console.log(
-						"Image doesn't contain #EE6777 or #CDBA44, skipping image post."
-					);
+					sendLogMessage(`Image has not changed, skipping image post.`);
 				}
 			} else {
-				startMessageChannel.send(
-					"It's not sunrise or sunset, skipping image post."
+				sendLogMessage(
+					`Image doesn't contain #EE6677 or #CDBA44, skipping image post.`
 				);
-				console.log("It's not sunrise or sunset, skipping image post.");
 			}
 		} else {
-			startMessageChannel.send('Image has not changed, skipping image post.');
-			console.log('Image has not changed, skipping image post.');
+			sendLogMessage(
+				`Sun is out (it's between sunrise and sunset), skipping image post.`
+			);
 		}
 	};
 
