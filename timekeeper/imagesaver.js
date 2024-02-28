@@ -27,7 +27,7 @@ jakbot.on('ready', () => {
 		new Date().toISOString()
 	);
 	setTimeout(() => {
-		startMessageChannel.bulkDelete(10);
+		startMessageChannel.bulkDelete(50);
 	}, 20 * 60 * 1000);
 	/**
 	 * Checks if the image at the specified URL has changed.
