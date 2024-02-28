@@ -4,11 +4,11 @@ import 'dotenv/config';
 import Jimp from 'jimp';
 import {start} from 'repl';
 const PREFIX = '!'; // You can change this to your desired command prefix.
-const northurl =
-	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR.jpg';
-const middleurl =
+const muonio = 'https://aurorasnow.fmi.fi/public_service/images/latest_MUO.jpg';
+const nyrola = 'https://aurorasnow.fmi.fi/public_service/images/latest_SIR.jpg';
+const hankasalmi =
 	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR_AllSky.jpg';
-const southurl =
+const metsahovi =
 	'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
 
 const auroradatanew =
@@ -31,15 +31,15 @@ jakbot.on('ready', () => {
 	}, 20 * 60 * 1000);
 	/**
 	 * Checks if the image at the specified URL has changed.
-	 * @param {string} southurl - The URL of the image to check.
+	 * @param {string} metsahovi - The URL of the image to check.
 	 * @returns {Promise<boolean>} - A promise that resolves to true if the image has changed, false otherwise.
 	 */
 	const sendLogMessage = (message) => {
 		startMessageChannel.send(message);
 		console.log(message);
 	};
-	const hasImageChanged = async (southurl) => {
-		const response = await fetch(southurl);
+	const hasImageChanged = async (metsahovi) => {
+		const response = await fetch(metsahovi);
 		const arrayBuffer = await response.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
 		const hash = crypto.createHash('sha1');
@@ -96,13 +96,22 @@ jakbot.on('ready', () => {
 	 * @returns {Promise<void>} - A promise that resolves when all messages are sent.
 	 */
 	const sendMessages = async (textChannel) => {
-		await textChannel.send({files: [northurl]});
+		await textChannel.send({files: [muonio]});
+		await textChannel.send('Muonio, Finland');
+		await textChannel.send('https://maps.app.goo.gl/rmr9YMBuR66GCB2X8');
+		await textChannel.send({files: [nyrola]});
 		await textChannel.send('Nyrölä Observatory, Finland');
-		await textChannel.send({files: [middleurl]});
+		await textChannel.send('https://maps.app.goo.gl/m9AHq8wxAhJyBVUMA');
+		await textChannel.send({files: [hankasalmi]});
 		await textChannel.send('Hankasalmi observatory Jyväskylän Sirius ry');
-		await textChannel.send({files: [southurl]});
+		await textChannel.send('https://maps.app.goo.gl/sDCpGgSkcMKgDojh6');
+		await textChannel.send({files: [metsahovi]});
 		await textChannel.send('Metsähovin radiotutkimusasema(Aalto yliopisto)');
+		await textChannel.send('https://maps.app.goo.gl/BG3JC7uHLLcdi5C1A');
 		await textChannel.send({files: [auroradatanew]});
+		await textChannel.send(
+			'https://www.ilmatieteenlaitos.fi/revontulet-ja-avaruussaa'
+		);
 	};
 	/**
 	 * Checks if an image contains specific colors and performs actions accordingly.
@@ -154,10 +163,10 @@ jakbot.on('ready', () => {
 	/**
 	 * Posts an image to a specified channel based on sunrise and sunset times.
 	 * @param {string} channelID - The ID of the channel to post the image in.
-	 * @param {string} southurl - The URL of the image to be posted.
+	 * @param {string} metsahovi - The URL of the image to be posted.
 	 * @returns {Promise<void>} - A promise that resolves once the image is posted.
 	 */
-	const postImage = async (channelID, southurl) => {
+	const postImage = async (channelID, metsahovi) => {
 		const channel = jakbot.channels.cache.get(channelID);
 		if (!channel) return console.error('The channel does not exist!');
 
@@ -171,12 +180,12 @@ jakbot.on('ready', () => {
 
 		const utcHours = new Date().getUTCHours();
 		if (utcHours < sunriseHours || utcHours > sunsetHours) {
-			await startMessageChannel.send({files: [southurl]});
+			await startMessageChannel.send({files: [metsahovi]});
 			const image = await Jimp.read(auroradatanew);
 			const containsColor = await checkImageColor(image);
 
 			if (containsColor) {
-				if (await hasImageChanged(southurl)) {
+				if (await hasImageChanged(metsahovi)) {
 					sendLogMessage(`Image has changed`);
 					sendMessages(channel);
 					sendLogMessage(`Posting image to channel ${textChannel}...`);
@@ -195,8 +204,8 @@ jakbot.on('ready', () => {
 		}
 	};
 
-	postImage(channelID, southurl);
+	postImage(channelID, metsahovi);
 	const intervalInMilliseconds =
 		(Math.floor(Math.random() * 10) + 1) * 60 * 1000; // 1 to 10 minutes
-	setInterval(() => postImage(channelID, southurl), intervalInMilliseconds);
+	setInterval(() => postImage(channelID, metsahovi), intervalInMilliseconds);
 });
