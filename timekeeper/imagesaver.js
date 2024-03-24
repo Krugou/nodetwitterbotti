@@ -4,12 +4,10 @@ import 'dotenv/config';
 import Jimp from 'jimp';
 import {start} from 'repl';
 const PREFIX = '!'; // You can change this to your desired command prefix.
-const muonio = 'https://aurorasnow.fmi.fi/public_service/images/latest_MUO.jpg';
-const nyrola = 'https://aurorasnow.fmi.fi/public_service/images/latest_SIR.jpg';
-const hankasalmi =
-	'https://aurorasnow.fmi.fi/public_service/images/latest_SIR_AllSky.jpg';
-const metsahovi =
-	'https://aurorasnow.fmi.fi/public_service/images/latest_HOV.jpg';
+const muonio = 'https://space.fmi.fi/MIRACLE/RWC/latest_MUO.jpg';
+const nyrola = 'https://space.fmi.fi/MIRACLE/RWC/latest_SIR.jpg';
+const hankasalmi = 'https://space.fmi.fi/MIRACLE/RWC/latest_SIR_AllSky.jpg';
+const metsahovi = 'https://space.fmi.fi/MIRACLE/RWC/latest_HOV.jpg';
 
 const auroradatanew =
 	'https://cdn.fmi.fi/weather-observations/products/magnetic-disturbance-observations/map-latest-fi.png';
